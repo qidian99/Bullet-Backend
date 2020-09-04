@@ -18,6 +18,7 @@ const typedef = gql`
 	extend type Mutation {
 		createRoomInvitation(roomId: ID! userId: ID!): Invitation!
 		acceptRoomInvitation(invitationId: ID!): Invitation!
+		declineRoomInvitation(invitationId: ID!): Invitation!
 	}
 `
 

@@ -11,7 +11,8 @@ const {
 	getUser,
 	getCurrentUser,
 	loadUsersByUsernames,
-	loadUsersByUserIds
+	loadUsersByUserIds,
+	changeInvitationStatus
 } = require('../../util');
 const {
 	ObjectId
@@ -40,18 +41,26 @@ module.exports = {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
-			// Check if user in the room
 			const invitation = await Invitation.findOne({
 				_id: invitationId,
-				user: currentUser._id,
+				userId: currentUser._id,
 			});
-		
-			if (!invitation) {
-				throw new Error("Room invitation does not exist")
-			}
+			changeInvitationStatus(invitation, 'accept')
+			await invitation.save();
+			return invitation;
+		},
 
-			invitation.accepted = true;
-
+		declineRoomInvitation: async (parent, {
+			invitationId,
+		}, {
+			user
+		}) => {
+			const currentUser = await getCurrentUser(user);
+			const invitation = await Invitation.findOne({
+				_id: invitationId,
+				userId: currentUser._id,
+			});
+			changeInvitationStatus(invitation, 'decline')
 			await invitation.save();
 			return invitation;
 		},

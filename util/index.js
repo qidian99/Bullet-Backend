@@ -71,6 +71,24 @@ const generateJWTToken = async (user) => {
 	return token;
 }
 
+const changeInvitationStatus = (invitation, mode = 'accept') => {
+	
+	if (!invitation) {
+		throw new Error("Room invitation does not exist")
+	}
+
+	// console.log(invitation)
+	if (invitation.accepted != -1) {
+		throw new Error("Cannot modify past invitation")
+	}
+
+	if (mode === 'accept') {
+		invitation.accepted = 1;
+	} else if (mode === 'decline') {
+		invitation.accepted = 0;
+	}
+}
+
 module.exports = {
 	generateUserModel: ({
 		user
@@ -80,4 +98,5 @@ module.exports = {
 	loadUsersByUsernames,
 	loadUsersByUserIds,
 	generateJWTToken,
+	changeInvitationStatus,
 }
