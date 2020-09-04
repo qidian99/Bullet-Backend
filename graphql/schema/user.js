@@ -26,7 +26,7 @@ const typedef = gql`
 
 	extend type Mutation {
 		createUser(username: String! password: String!): User!
-		login(input: UserInput!): LoginResponse!
+		login(username: String! password: String!): LoginResponse!
 		delete(username: String!): User!
 	}
 `

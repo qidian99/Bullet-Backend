@@ -23,7 +23,6 @@ module.exports = {
 		createRoom: async(parent, { alias, users, admins, public }, { user }) => {
 			const currentUser = await getCurrentUser(user);
 			console.log('current user', currentUser);
-			const 
 
 			const room = await new Room({
 				alias,

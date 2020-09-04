@@ -34,15 +34,12 @@ const server = new ApolloServer({
 
     return {
 			user,
-			models: {
-				User: generateUserModel({ user }),
-			}
     }
   },
 	formatError: (err) => {
 		console.log(err);
 		
-		return new Error(err.message);
+		return new Error(err);
 
     // Don't give the specific errors to the client.
     if (err.message.startsWith("Database Error: ")) {

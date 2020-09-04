@@ -3,6 +3,9 @@ const userSchema = require('./user');
 const roomSchema = require('./room');
 
 const rootSchema = gql `
+	scalar JSON
+	scalar JSONObject
+
 	type Query{
 		_:Boolean
 	}

@@ -55,6 +55,7 @@ module.exports = {
 		
 			const passwordMatch = await bcrypt.compare(password, user.password)
 		
+			console.log('sbbbbb',	process.env.JWT_SECRET)
 			if (!passwordMatch) {
 				throw new Error('Incorrect password');
 			}
