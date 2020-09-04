@@ -16,7 +16,7 @@ const typedef = gql`
 	}
 
 	extend type Mutation {
-		createRoom(alias: String! users: Array! admins: Array! public: Boolean ): Room!
+		createRoom(alias: String! users: JSON! admins: JSON! public: Boolean ): Room!
 	}
 `
 
