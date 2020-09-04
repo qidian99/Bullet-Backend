@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
+mongoose.set('useCreateIndex', true);
 const { ApolloServer } = require('apollo-server');
 const ConstraintDirective = require('graphql-constraint-directive')
 
