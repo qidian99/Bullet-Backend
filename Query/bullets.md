@@ -1,5 +1,5 @@
 mutation createBullet {
-  createBullet(roomId: "5f5284340d379d2e184cad78" timestamp: 12324532 content: "my bullet") {
+  createBullet(roomId: "5f52b87b99581d573cbe0382" timestamp: 12324532 content: "my bullet 4") {
     user {
       userId
       username
@@ -22,9 +22,15 @@ query bullets {
 }
 
 
-query findAllBulletsInRoom {
-  findAllBulletsInRoom(room: "5f5284340d379d2e184cad78") {
+query allBulletsInRoom {
+  allBulletsInRoom(roomId: "5f52b217d9cc4831fc762fad") {
       ...bulletFragment
+  }
+}
+
+query bulletsByUser {
+  bulletsByUser(userId: "5f52afa73eb6fa08fcd3692a") {
+    ...bulletFragment
   }
 }
 

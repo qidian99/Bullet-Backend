@@ -1,5 +1,5 @@
-mutation createRoom2 {
-  createRoom(alias: "room3" users:"[\"5f527d952f66cc4ee45fe69d\",\"5f5280191e6a9b244079d96a\"]" admins:"[\"5f5280191e6a9b244079d96a\"]" public:true) {
+mutation createRoom {
+  createRoom(alias: "room2" users:"[\"5f52bc83e3221e1950a55fd6\",\"5f52bc89e3221e1950a55fd7\",\"5f52bc8de3221e1950a55fd8\"]" admins:"[\"5f52bc83e3221e1950a55fd6\"]" public:true) {
     ...roomFragment
   }
 }

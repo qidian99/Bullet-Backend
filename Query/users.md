@@ -44,6 +44,23 @@ mutation createUserQidian {
   }
 }
 
+
+mutation loginQidian2 {
+  login(username: "qidian2" password: "qidian") {
+    token
+  }
+}
+
+mutation createUserQidian2 {
+	createUser(username: "qidian2" password: "qidian")  {
+    user {
+      ...userProfile
+    }
+    token
+  }
+}
+
+
 mutation createUserWithProfile {
 	createUser(username: "qidian2" password: "123456" email: "qidian@qidian.com" firstname: "Dian" lastname: "Qi")  {
     user {
