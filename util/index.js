@@ -6,6 +6,8 @@ const Room = mongoose.model('Room');
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
 
+const { INVITATION_TYPES, INVITATION_ACTIONS } = require('./types')
+
 const getUser = token => {
 	try {
 		if (token) {
@@ -97,9 +99,9 @@ const changeInvitationStatus = (invitation, mode = 'accept') => {
 		throw new Error("Cannot modify past invitation")
 	}
 
-	if (mode === 'accept') {
+	if (mode === INVITATION_ACTIONS.ACCEPT) {
 		invitation.accepted = 1;
-	} else if (mode === 'decline') {
+	} else if (mode === INVITATION_ACTIONS.DECLINE) {
 		invitation.accepted = 0;
 	}
 }
@@ -115,4 +117,6 @@ module.exports = {
 	generateJWTToken,
 	changeInvitationStatus,
 	getCurrentRoom,
+	INVITATION_TYPES,
+	INVITATION_ACTIONS,
 }

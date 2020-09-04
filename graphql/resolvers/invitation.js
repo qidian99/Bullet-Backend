@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = mongoose.model('User');
 const Room = mongoose.model('Room');
 const Bullet = mongoose.model('Bullet');
-const Invitation = mongoose.model('Invitation');
+const RoomInvitation = mongoose.model('RoomInvitation');
 
 const {
 	getUser,
@@ -21,10 +21,11 @@ const bullet = require('../../models/bullet');
 const {
 	find
 } = require('../../models/bullet');
+const { INVITATION_TYPES, INVITATION_ACTIONS } = require('../../util/types');
 
 
 module.exports = {
-	Invitation: {
+	RoomInvitation: {
 		invitationId: (parent) => parent._id,
 		user: (parent) => {
 			return User.findById(parent.userId);
@@ -41,11 +42,11 @@ module.exports = {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
-			const invitation = await Invitation.findOne({
+			const invitation = await RoomInvitation.findOne({
 				_id: invitationId,
 				userId: currentUser._id,
 			});
-			changeInvitationStatus(invitation, 'accept')
+			changeInvitationStatus(invitation, INVITATION_ACTIONS.ACCEPT)
 			await invitation.save();
 			return invitation;
 		},
@@ -56,11 +57,11 @@ module.exports = {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
-			const invitation = await Invitation.findOne({
+			const RoomInvitation = await RoomInvitation.findOne({
 				_id: invitationId,
 				userId: currentUser._id,
 			});
-			changeInvitationStatus(invitation, 'decline')
+			changeInvitationStatus(invitation, INVITATION_ACTIONS.DECLINE)
 			await invitation.save();
 			return invitation;
 		},
@@ -89,7 +90,7 @@ module.exports = {
 			}
 
 
-			const invitation = await new Invitation({
+			const invitation = await new RoomInvitation({
 				userId: invitationUser._id,
 				roomId: room._id,
 				accepted: -1,
@@ -100,12 +101,14 @@ module.exports = {
 	},
 	Query: {
 		invitations: async (parent) => {
-			return await Invitation.find({});
+			return await RoomInvitation.find({});
 		},
 		allRoomInvitations: async (parent, _, { user }) => {
 			const currentUser = await getCurrentUser(user);
 
-			const invitations = await Invitation.find({ userId: currentUser._id })
+			const invitations = await RoomInvitation.find({ 
+				userId: currentUser._id,
+			})
 			return invitations;
 		}
 	}

@@ -1,7 +1,7 @@
 const { gql } = require('apollo-server');
 
 const typedef = gql`
-	type Invitation {
+	type RoomInvitation {
 		invitationId: ID!
 		user: User!
 		room: Room
@@ -10,14 +10,14 @@ const typedef = gql`
 	}
 
 	extend type Query {
-		invitations: [Invitation],
-		allRoomInvitations: [Invitation]
+		invitations: [RoomInvitation],
+		allRoomInvitations: [RoomInvitation]
 	}
 
 	extend type Mutation {
-		createRoomInvitation(roomId: ID! userId: ID!): Invitation!
-		acceptRoomInvitation(invitationId: ID!): Invitation!
-		declineRoomInvitation(invitationId: ID!): Invitation!
+		createRoomInvitation(roomId: ID! userId: ID!): RoomInvitation!
+		acceptRoomInvitation(invitationId: ID!): RoomInvitation!
+		declineRoomInvitation(invitationId: ID!): RoomInvitation!
 	}
 `
 

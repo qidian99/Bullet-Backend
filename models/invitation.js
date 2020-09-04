@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Int32 } = require('mongodb');
 const { Schema } = mongoose;
 
-const InvitationSchema = new Schema({
+const RoomInvitationSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   roomId: { type: Schema.Types.ObjectId, ref: 'Room', required: false },
   accepted: { type: Number, required: true },
@@ -10,4 +10,4 @@ const InvitationSchema = new Schema({
   timestamps: true,
 });
 
-module.exports = mongoose.model('Invitation', InvitationSchema);
+module.exports = mongoose.model('RoomInvitation', RoomInvitationSchema);

@@ -1,12 +1,12 @@
 mutation createInvitation {
-  createRoomInvitation(roomId: "5f529977baa41a24cc4c236f" userId: "5f5263b9b76e96366c4b3c74") {
+  createRoomInvitation(roomId: "5f52b87b99581d573cbe0382" userId: "5f52b6e0d0469e0470a2b65f") {
     ...invitationFragment
   }
 }
 
 
 mutation acceptRoomInvitation {
-  acceptRoomInvitation(invitationId: "5f52a5c8b236b45a9011fbeb") {
+  acceptRoomInvitation(invitationId: "5f52b8aa99581d573cbe0385") {
 		...invitationFragment
   }
 }
@@ -26,7 +26,7 @@ query allRoomInvitations {
   }
 }
 
-fragment invitationFragment on Invitation {
+fragment invitationFragment on RoomInvitation {
   invitationId
   user {
     username

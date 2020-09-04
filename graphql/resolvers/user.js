@@ -41,7 +41,7 @@ module.exports = {
 				lastname,
 				avatar
 			} = args;
-			console.log('sss', username);
+			// console.log('sss', username);
 
 			const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -59,7 +59,8 @@ module.exports = {
 				firstname,
 				lastname,
 				email,
-				avatar
+				avatar,
+				friends: [],
 			}).save();
 
 			const token = generateJWTToken(newUser);
