@@ -56,11 +56,20 @@ module.exports = {
 		bullets: async (parent) => {
 			return await Bullet.find({});
 		},
-		findAllBulletsInRoom: async (parent, { room }, { user }) => {
+		bulletsByUser: async (parent, { userId, roomId }, { user }) => {
+			const currentUser = await getCurrentUser(user);
+			const query = { userId }
+			if (roomId) {
+				query.roomId = roomId;
+			}
+			const bullets = await Bullet.find(query);
+			return bullets;
+		},
+		allBulletsInRoom: async (parent, { roomId }, { user }) => {
 		
 			const currentUser = await getCurrentUser(user);
 
-			const bullets = await Bullet.find({ room });
+			const bullets = await Bullet.find({ roomId });
 
 			return bullets;
 		}

@@ -47,7 +47,7 @@ copy the 1000 hour JWT for these users in `token.md` into `HTTP Headers` of Grap
 ### Queries
 1. bullets
 2. bulletByUser
-3. findAllBulletsInRoom
+3. allBulletsInRoom
 
 ### Mutations
 1. createBullet
