@@ -14,14 +14,29 @@ query currentUser {
   }
 }
 
-mutation login {
+mutation loginPeerless07 {
   login(username: "peerless07" password: "123456") {
     token
   }
 }
 
-mutation createUser {
+mutation createUserPeerless07 {
 	createUser(username: "peerless07" password: "123456")  {
+    user {
+      ...userProfile
+    }
+    token
+  }
+}
+
+mutation loginQidian {
+  login(username: "qidian" password: "qidian") {
+    token
+  }
+}
+
+mutation createUserQidian {
+	createUser(username: "qidian" password: "qidian")  {
     user {
       ...userProfile
     }
