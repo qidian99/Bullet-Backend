@@ -99,22 +99,14 @@ module.exports = {
 		},
 	},
 	Query: {
-		bullets: async (parent) => {
-			return await Bullet.find({});
+		invitations: async (parent) => {
+			return await Invitation.find({});
 		},
-		findAllBulletsInRoom: async (parent, {
-			room
-		}, {
-			user
-		}) => {
-
+		allRoomInvitations: async (parent, _, { user }) => {
 			const currentUser = await getCurrentUser(user);
 
-			const bullets = await Bullet.find({
-				room
-			});
-
-			return bullets;
+			const invitations = await Invitation.find({ userId: currentUser._id })
+			return invitations;
 		}
 	}
 }

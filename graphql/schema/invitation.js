@@ -10,9 +10,8 @@ const typedef = gql`
 	}
 
 	extend type Query {
-		Invitations: [Invitation],
-		InvitationByUser(user: ID!): [Invitation]
-		findAllInvitationsInRoom(room: ID!): [Invitation]
+		invitations: [Invitation],
+		allRoomInvitations: [Invitation]
 	}
 
 	extend type Mutation {

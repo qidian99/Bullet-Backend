@@ -81,11 +81,5 @@ module.exports = {
 			console.log(rooms[0].users, typeof rooms[0].users);
 			return rooms;
 		},
-		findRoomInvitations: async (parent, _, { user }) => {
-			const currentUser = await getCurrentUser(user);
-
-			const rooms = await Room.find({ pending: currentUser._id })
-			return rooms;
-		}
 	}
 }
