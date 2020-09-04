@@ -7,6 +7,8 @@ const RoomSchema = new Schema({
   admins: { type: Array, require: true }, // At least one admin for a room
   pending: { type: Array, required: false }, // Pending list for all the users waiting to join the room
   public: { type: Boolean, required: false }, // Whether the room is public or not
+}, {
+  timestamps: true,
 });
 
 module.exports = mongoose.model('Room', RoomSchema);
