@@ -2,6 +2,7 @@ const { gql } = require('apollo-server');
 const userSchema = require('./user');
 const roomSchema = require('./room');
 const bulletSchema = require('./bullet');
+const invitationSchema = require('./invitation');
 
 const rootSchema = gql `
 	scalar JSON
@@ -19,4 +20,5 @@ module.exports = [
 	userSchema,
 	roomSchema,
 	bulletSchema,
+	invitationSchema,
 ];
