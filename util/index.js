@@ -91,7 +91,7 @@ const generateJWTToken = async (user) => {
 const changeInvitationStatus = (invitation, mode = 'accept') => {
 	
 	if (!invitation) {
-		throw new Error("Room invitation does not exist")
+		throw new Error("Invitation object does not exist")
 	}
 
 	// console.log(invitation)

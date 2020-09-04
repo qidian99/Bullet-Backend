@@ -3,8 +3,8 @@
 ## User JWT
 
 The order of user that has JWT for 1000 hours:
-1. peerless07
-2. qidian
+1. qidian
+2. peerless07
 3. qidian2
 
 ```json

@@ -3,6 +3,7 @@ const userSchema = require('./user');
 const roomSchema = require('./room');
 const bulletSchema = require('./bullet');
 const roomInvitationSchema = require('./invitation');
+const friendInvitationSchema = require('./friend');
 
 const rootSchema = gql `
 	scalar JSON
@@ -21,4 +22,5 @@ module.exports = [
 	roomSchema,
 	bulletSchema,
 	roomInvitationSchema,
+	friendInvitationSchema,
 ];

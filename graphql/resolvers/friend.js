@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = mongoose.model('User');
 const Room = mongoose.model('Room');
 const Bullet = mongoose.model('Bullet');
-const RoomInvitation = mongoose.model('RoomInvitation');
+const FriendInvitation = mongoose.model('FriendInvitation');
 
 const {
 	getUser,
@@ -26,81 +26,70 @@ const { INVITATION_TYPES, INVITATION_ACTIONS } = require('../../util/types');
 
 
 module.exports = {
-	RoomInvitation: {
+	FriendInvitation: {
 		invitationId: (parent) => parent._id,
-		user: (parent) => {
-			return User.findById(parent.userId);
+		from: (parent) => {
+			return User.findById(parent.from);
 		},
-		room: (parent) => {
-			return Room.findById(parent.roomId);
+		to: (parent) => {
+			return User.findById(parent.to);
 		},
 		sentAt: (parent) => parent.createdAt,
 	},
 	Mutation: {
-		acceptRoomInvitation: async (parent, {
+		acceptFriendInvitation: async (parent, {
 			invitationId,
 		}, {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
-			const invitation = await RoomInvitation.findOne({
+			const invitation = await FriendInvitation.findOne({
 				_id: invitationId,
-				userId: currentUser._id,
+				to: currentUser._id,
 			});
 			changeInvitationStatus(invitation, INVITATION_ACTIONS.ACCEPT)
 
 			// Add the user to the room's user list
-			const currentRoom = await getCurrentRoom(invitation.roomId);
-			currentRoom.users.push(currentUser._id);
-			currentRoom.save();
-
-			await invitation.save();
+			const fromUser = await User.findById(invitation.from);
+			if (!fromUser.friends) {
+				fromUser.friends = []
+			}
+			fromUser.friends.push(currentUser._id);
+			fromUser.save();
+			invitation.save();
 			return invitation;
 		},
 
-		declineRoomInvitation: async (parent, {
+		declineFriendInvitation: async (parent, {
 			invitationId,
 		}, {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
-			const RoomInvitation = await RoomInvitation.findOne({
+			const invitation = await FriendInvitation.findOne({
 				_id: invitationId,
-				userId: currentUser._id,
+				to: currentUser._id,
 			});
 			changeInvitationStatus(invitation, INVITATION_ACTIONS.DECLINE)
-			await invitation.save();
+			invitation.save();
 			return invitation;
 		},
 
-		createRoomInvitation: async (parent, {
-			roomId,
-			userId,
+		createFriendInvitation: async (parent, {
+			to,
 		}, {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
 			// Check if user in the room
-			const room = Room.find({
-				_id: roomId,
-				admins: currentUser._id,
-				users: currentUser._id,
-			});
-
-			if (!room) {
-				throw new Error("User is not the admin of the room, so he/she cannot send invitation");
+			const toUser = await User.findById(to);
+			if (!toUser) {
+				throw new Error("You are sending friend request to a black hole.")
 			}
 
-			const invitationUser = await User.findById(userId);
-
-			if (!invitationUser) {
-				throw new Error("The invited user does not exist.")
-			}
-
-
-			const invitation = await new RoomInvitation({
-				userId: invitationUser._id,
-				roomId: room._id,
+			const invitation = await new FriendInvitation({
+				from: currentUser._id,
+				to: toUser._id,
 				accepted: -1,
 			}).save();
 
@@ -108,14 +97,11 @@ module.exports = {
 		},
 	},
 	Query: {
-		invitations: async (parent) => {
-			return await RoomInvitation.find({});
-		},
-		roomInvitations: async (parent, _, { user }) => {
+		friendInvitations: async (parent, _, { user }) => {
 			const currentUser = await getCurrentUser(user);
 
-			const invitations = await RoomInvitation.find({ 
-				userId: currentUser._id,
+			const invitations = await FriendInvitation.find({ 
+				to: currentUser._id,
 			})
 			return invitations;
 		}
