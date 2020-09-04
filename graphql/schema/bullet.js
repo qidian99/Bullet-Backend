@@ -12,6 +12,7 @@ const typedef = gql`
 	extend type Query {
 		bullets: [Bullet],
 		bulletByUser(user: ID!): [Bullet]
+		findAllBulletsInRoom(room: ID!): [Bullet]
 	}
 
 	extend type Mutation {
