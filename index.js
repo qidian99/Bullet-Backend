@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const { ApolloServer } = require('apollo-server');
@@ -10,7 +12,7 @@ const resolvers = require('./graphql/resolvers')
 const cors = require('./middlewares/cors');
 const errorHandler = require('./middlewares/errorHandler');
 
-const url = 'mongodb://qidian:qidian@localhost:27017/dev';
+const url = 'mongodb://localhost:27017/bullet';
 
 const app = express();
 
@@ -53,7 +55,7 @@ const server = new ApolloServer({
 });
 
 server.listen().then(({ url }) => {
-	console.log(`🚀 Server ready at ${url}`)
+	console.log(`Server ready at ${url}`)
  });
 
 mongoose

@@ -3,7 +3,7 @@ const { gql } = require('apollo-server');
 const typedef = gql`
 	type User {
 		userId: ID!
-		pid: String!
+		username: String!
 		password: String
 	}
 
@@ -13,7 +13,7 @@ const typedef = gql`
 	}
 
 	input UserInput {
-		pid: String!
+		username: String!
 		password: String
 	}
 
@@ -21,14 +21,13 @@ const typedef = gql`
 		users: [User],
 		user(userId: ID!): User!
 		currentUser: User
-		getUserByPid(pid: String!): User!
 		verifyToken(token: String!): User!
 	}
 
 	extend type Mutation {
-		createUser(input: UserInput!): User!
+		createUser(username: String! password: String!): User!
 		login(input: UserInput!): LoginResponse!
-		delete(pid: String!): User!
+		delete(username: String!): User!
 	}
 `
 
