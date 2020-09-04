@@ -19,14 +19,21 @@ const {
 module.exports = {
 	Room: {
 		roomId: (parent) => parent._id,
-		// users: async (parent) => {
-		// 	const ids = parent.map(id => ObjectId(id));
-		// 	return User.find({ _id: ids });
-		// },
-		// admins: async (parent) => {
-		// 	const ids = parent.map(id => ObjectId(id));
-		// 	return User.find({ _id: ids });
-		// }
+		users: async (parent) => {
+			return User.find({ _id: {
+				$in: parent.users
+			}});
+		},
+		admins: async (parent) => {
+			return User.find({ _id: {
+				$in: parent.admins
+			}});
+		},
+		pending: async (parent) => {
+			return User.find({ _id: {
+				$in: parent.pending
+			}});
+		}
 	},
 	Mutation: {
 		createRoom: async (parent, {
@@ -39,8 +46,6 @@ module.exports = {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
-			console.log('current user', currentUser);
-			console.log('users', userStr)
 
 			const loaderFn = loader === 'id' ? loadUsersByUserIds : loadUsersByUsernames;
 
@@ -49,9 +54,9 @@ module.exports = {
 
 			const room = await new Room({
 				alias,
-				users: [currentUser],
-				admins: admins,
-				pending: users.filter(),
+				users: [currentUser._id],
+				admins: admins.map(admin => admin._id),
+				pending: users.filter((user) => user._id !== currentUser._id).map(user => user._id),
 				public,
 			}).save();
 
@@ -65,6 +70,12 @@ module.exports = {
 		rooms: async (parent) => {
 			const rooms = await Room.find({});
 			console.log(rooms[0].users, typeof rooms[0].users);
+			return rooms;
+		},
+		findRoomInvitations: async (parent, _, { user }) => {
+			const currentUser = await getCurrentUser(user);
+
+			const rooms = await Room.find({ pending: currentUser._id })
 			return rooms;
 		}
 	}

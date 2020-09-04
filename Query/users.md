@@ -6,6 +6,14 @@ query Users {
   }
 }
 
+query currentUser {
+  currentUser {
+    userId
+    password
+    username
+  }
+}
+
 mutation login {
   login(username: "peerless07" password: "123456") {
     token

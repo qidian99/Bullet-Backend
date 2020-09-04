@@ -17,11 +17,16 @@ const getUser = token => {
 };
 
 const getCurrentUser = async (user) => {
+
+	const ERR_STR = "Invalid user in session: User does not exist";
+	if (!user) {
+		throw new Error(ERR_STR);
+	}
 	const userObj = await User.findOne({
 		username: user.username
 	})
 	if (!userObj) {
-		throw new Error("Invalid user in session: User does not exist");
+		throw new Error(ERR_STR);
 	}
 	return userObj;
 };
