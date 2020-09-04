@@ -1,16 +1,6 @@
 mutation createBullet {
-  createBullet(roomId: "5f52b87b99581d573cbe0382" timestamp: 12324532 content: "my bullet 4") {
-    user {
-      userId
-      username
-    }
-    room {
-      roomId
-      alias
-    }
-    bulletId
-    content
-    timestamp
+  createBullet(roomId: "5f52bd529a1f761f8c44eae3" source: "Bilibili" timestamp: 12324532 content: "my bullet 4") {
+    ...bulletFragment
   }
 }
 
@@ -23,7 +13,7 @@ query bullets {
 
 
 query allBulletsInRoom {
-  allBulletsInRoom(roomId: "5f52b217d9cc4831fc762fad") {
+  allBulletsInRoom(roomId: "5f52bd529a1f761f8c44eae3") {
       ...bulletFragment
   }
 }
@@ -44,6 +34,7 @@ fragment bulletFragment on Bullet {
       roomId
       alias
 		}
+  	source
     timestamp
     content
 }

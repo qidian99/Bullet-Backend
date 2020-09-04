@@ -7,7 +7,9 @@ const User = mongoose.model('User');
 const Joi = require('joi');
 
 const {
-	getUser, getCurrentUser,generateJWTToken
+	getUser,
+	getCurrentUser,
+	generateJWTToken
 } = require('../../util');
 
 const userInputSchema = Joi.object().keys({
@@ -69,7 +71,9 @@ module.exports = {
 				user: newUser,
 			}
 		},
-		updateUser: async (parent, args, { user: contextUser }) => {
+		updateUser: async (parent, args, {
+			user: contextUser
+		}) => {
 			const {
 				password,
 				email,
@@ -151,6 +155,80 @@ module.exports = {
 		users: async (parent) => {
 			return await User.find({});
 		},
+		findUser: async (parent, {
+			username
+		}, {
+			user
+		}) => {
+			const currentUser = await getCurrentUser(user);
+
+			const users = await User.aggregate([{
+					$match: {
+						$and: [{
+							$or: [{
+								username: {
+									$regex: username,
+									"$options": 'i',
+								}
+							}, {
+								email: {
+									$regex: username,
+									"$options": 'i',
+								}
+							}]
+						}, {
+							_id: {
+								$ne: currentUser._id
+							}
+						}],
+					},
+					// Check the pending friend status	
+				}, {
+					$lookup: {
+						from: "friendinvitations",
+						localField: "_id",
+						foreignField: "to",
+						// pipeline: [{
+						// 	$match: {
+						// 		from: currentUser._id
+						// 	}
+						// }],
+						as: "pending"
+					}
+				},
+				// {
+				// 	"$unwind": "$pending"
+				// },
+				// {
+				// 	"$match": {
+				// 		"pending.from": currentUser._id
+				// 	}
+				// },
+				// {
+				// 	"$group": {
+				// 		"_id": "$_id",
+				// 		"friends": {
+				// 			"$first": "$friends:"
+				// 		},
+				// 		"username": {
+				// 			"$first": "$username"
+				// 		},
+				// 		"contain": {
+				// 			"$first": "$contain"
+				// 		},
+				// 		"pending": {
+				// 			"$push": "$pending"
+				// 		}
+				// 	}
+				// }
+			])
+
+			console.log('users', users);
+			users.forEach(u => console.log('u.pending', u.pending))
+
+			return users;
+
+		},
 		verifyToken: async (parent, {
 			token
 		}) => {
@@ -161,13 +239,13 @@ module.exports = {
 			console.log(user);
 			// { 
 			// 	id: '5e00dd20c842b116924ecfdc',
-			// 	pid: 'A14581615',
+			// 	username: 'qidian',
 			// 	iat: 1577114969,
 			// 	exp: 1577201369 --- in seconds
 			// }
 			return User.findOne({
 				username: user.username
 			});
-		}
+		},
 	}
 }

@@ -26,6 +26,7 @@ const typedef = gql`
 		user(userId: ID!): User!
 		currentUser: User
 		verifyToken(token: String!): User!
+		findUser(username: String): [User]
 	}
 
 	extend type Mutation {

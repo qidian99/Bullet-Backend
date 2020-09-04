@@ -13,6 +13,7 @@ const typedef = gql`
 
 	extend type Query {
 		rooms: [Room],
+		allRooms: [Room],
     room(room: ID!): Room
 	}
 
