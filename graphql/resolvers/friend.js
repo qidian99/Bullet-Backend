@@ -22,7 +22,10 @@ const bullet = require('../../models/bullet');
 const {
 	find
 } = require('../../models/bullet');
-const { INVITATION_TYPES, INVITATION_ACTIONS } = require('../../util/types');
+const {
+	INVITATION_TYPES,
+	INVITATION_ACTIONS
+} = require('../../util/types');
 
 
 module.exports = {
@@ -87,6 +90,19 @@ module.exports = {
 				throw new Error("You are sending friend request to a black hole.")
 			}
 
+			// Check if a friend invitation has already been sent
+			const inv = await FriendInvitation.findOne({
+				from: currentUser._id,
+				to: toUser._id,
+				accepted: {
+					$in: [1, -1],
+				}
+			});
+
+			if (inv) {
+				throw new Error("Either you are already friend with the user, or you have an ongoing friend request.")
+			}
+
 			const invitation = await new FriendInvitation({
 				from: currentUser._id,
 				to: toUser._id,
@@ -97,11 +113,14 @@ module.exports = {
 		},
 	},
 	Query: {
-		friendInvitations: async (parent, _, { user }) => {
+		friendInvitations: async (parent, _, {
+			user
+		}) => {
 			const currentUser = await getCurrentUser(user);
 
-			const invitations = await FriendInvitation.find({ 
+			const invitations = await FriendInvitation.find({
 				to: currentUser._id,
+				accepted: { $ne: 1 },
 			})
 			return invitations;
 		}
