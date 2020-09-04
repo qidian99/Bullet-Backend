@@ -4,6 +4,9 @@ const { Schema } = mongoose;
 const BulletSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   roomId: { type: Schema.Types.ObjectId, ref: 'Room', required: false }, // False for testing purposes
+  source: { type: String, required: true },
+  tags: { type: Array, required: false },
+  type: { type: String, required: false },
   timestamp: { type: Number, required: true },
   content: { type: String, required: true },
 }, {

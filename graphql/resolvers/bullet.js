@@ -35,6 +35,9 @@ module.exports = {
 			roomId,
 			timestamp,
 			content,
+			source,
+			type,
+			tags,
 		}, {
 			user
 		}) => {
@@ -44,6 +47,9 @@ module.exports = {
 			const bullet = await new Bullet({
 				userId: currentUser._id,
 				roomId: currentRoom._id,
+				source,
+				type,
+				tags: tags || [],
 				timestamp,
 				content,
 			}).save();
@@ -56,20 +62,33 @@ module.exports = {
 		bullets: async (parent) => {
 			return await Bullet.find({});
 		},
-		bulletsByUser: async (parent, { userId, roomId }, { user }) => {
+		bulletsByUser: async (parent, {
+			userId,
+			roomId
+		}, {
+			user
+		}) => {
 			const currentUser = await getCurrentUser(user);
-			const query = { userId }
+			const query = {
+				userId
+			}
 			if (roomId) {
 				query.roomId = roomId;
 			}
 			const bullets = await Bullet.find(query);
 			return bullets;
 		},
-		allBulletsInRoom: async (parent, { roomId }, { user }) => {
-		
+		allBulletsInRoom: async (parent, {
+			roomId
+		}, {
+			user
+		}) => {
+
 			const currentUser = await getCurrentUser(user);
 
-			const bullets = await Bullet.find({ roomId });
+			const bullets = await Bullet.find({
+				roomId
+			});
 
 			return bullets;
 		}
