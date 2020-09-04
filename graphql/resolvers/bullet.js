@@ -15,6 +15,7 @@ const {
 const {
 	ObjectId
 } = require('mongodb');
+const bullet = require('../../models/bullet');
 
 
 module.exports = {
@@ -22,6 +23,9 @@ module.exports = {
 		bulletId: (parent) => parent._id,
 		user: (parent) => {
 			return User.findById(parent.user);
+		},
+		room: (parent) => {
+			return Room.findById(parent.room);
 		}
 	},
 	Mutation: {
@@ -46,10 +50,16 @@ module.exports = {
 		},
 	},
 	Query: {
-		rooms: async (parent) => {
-			const rooms = await Room.find({});
-			console.log(rooms[0].users, typeof rooms[0].users);
-			return rooms;
+		bullets: async (parent) => {
+			return await Bullet.find({});
+		},
+		findAllBulletsInRoom: async (parent, { room }, { user }) => {
+		
+			const currentUser = await getCurrentUser(user);
+
+			const bullets = await Bullet.find({ room });
+
+			return bullets;
 		}
 	}
 }
