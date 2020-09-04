@@ -11,7 +11,7 @@ const typedef = gql`
 
 	extend type Query {
 		invitations: [RoomInvitation],
-		allRoomInvitations: [RoomInvitation]
+		roomInvitations: [RoomInvitation]
 	}
 
 	extend type Mutation {

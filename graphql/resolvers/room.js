@@ -83,7 +83,7 @@ module.exports = {
 	Query: {
 		rooms: async (parent) => {
 			const rooms = await Room.find({});
-			console.log(rooms[0].users, typeof rooms[0].users);
+			// console.log(rooms[0].users, typeof rooms[0].users);
 			return rooms;
 		},
 	}
