@@ -22,19 +22,25 @@ module.exports = {
 	Room: {
 		roomId: (parent) => parent._id,
 		users: async (parent) => {
-			return User.find({ _id: {
-				$in: parent.users
-			}});
+			return User.find({
+				_id: {
+					$in: parent.users
+				}
+			});
 		},
 		admins: async (parent) => {
-			return User.find({ _id: {
-				$in: parent.admins
-			}});
+			return User.find({
+				_id: {
+					$in: parent.admins
+				}
+			});
 		},
 		pending: async (parent) => {
-			return User.find({ _id: {
-				$in: parent.pending
-			}});
+			return User.find({
+				_id: {
+					$in: parent.pending
+				}
+			});
 		}
 	},
 	Mutation: {
@@ -67,12 +73,12 @@ module.exports = {
 				public,
 			}).save();
 
-					
+
 			await Promise.all(pendingList.map((pendingUser) => {
 				// console.log('pendingUser', pendingUser);
 				return new RoomInvitation({
 					roomId: room._id,
-					userId: pendingUser._id, 
+					userId: pendingUser._id,
 					accepted: -1,
 				}).save();
 			}));
@@ -86,5 +92,13 @@ module.exports = {
 			// console.log(rooms[0].users, typeof rooms[0].users);
 			return rooms;
 		},
+		allRooms: async (parent, _, {
+			user
+		}) => {
+			const currentUser = await getCurrentUser(user);
+			return Room.find({
+				users: ObjectId(currentUser._id)
+			})
+		}
 	}
 }
