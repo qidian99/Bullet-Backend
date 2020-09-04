@@ -1,5 +1,6 @@
 const { gql } = require('apollo-server');
 const userSchema = require('./user');
+const roomSchema = require('./room');
 
 const rootSchema = gql `
 	type Query{
@@ -11,5 +12,6 @@ const rootSchema = gql `
 `
 module.exports = [
 	rootSchema,
-	userSchema, 
+	userSchema,
+	roomSchema,
 ];
