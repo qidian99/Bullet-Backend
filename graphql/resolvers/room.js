@@ -92,13 +92,26 @@ module.exports = {
 			// console.log(rooms[0].users, typeof rooms[0].users);
 			return rooms;
 		},
-		allRooms: async (parent, _, {
+		allRooms: async (parent, {
+			userId
+		}, {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
-			return Room.find({
-				users: ObjectId(currentUser._id)
-			})
+
+			let query;
+			console.log(typeof currentUser._id)
+			if (userId && ObjectId(userId) !== currentUser._id) {
+				query = {
+					users: ObjectId(userId)
+				}
+			} else {
+				query = {
+					users: ObjectId(currentUser._id)
+				}
+			}
+
+			return Room.find(query)
 		}
 	}
 }
