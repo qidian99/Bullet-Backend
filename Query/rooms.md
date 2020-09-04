@@ -6,6 +6,13 @@ mutation createRoom {
   }
 }
 
+mutation createRoom2 {
+  createRoom(alias: "room" users:"[\"5f527d952f66cc4ee45fe69d\",\"5f5280191e6a9b244079d96a\"]" admins:"[\"5f5280191e6a9b244079d96a\"]" public:true) {
+    roomId
+    alias
+  }
+}
+
 query rooms {
   rooms {
     roomId

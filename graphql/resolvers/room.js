@@ -5,8 +5,15 @@ const jwt = require('jsonwebtoken');
 
 const User = mongoose.model('User');
 const Room = mongoose.model('Room');
-const { getUser, getCurrentUser, loadUsersByUsernames } = require('../../util');
-const { ObjectId } = require('mongodb');
+const {
+	getUser,
+	getCurrentUser,
+	loadUsersByUsernames,
+	loadUsersByUserIds
+} = require('../../util');
+const {
+	ObjectId
+} = require('mongodb');
 
 
 module.exports = {
@@ -22,19 +29,29 @@ module.exports = {
 		// }
 	},
 	Mutation: {
-		createRoom: async (parent, { alias, users: userStr, admins: adminsStr, public }, { user }) => {
+		createRoom: async (parent, {
+			alias,
+			users: userStr,
+			admins: adminsStr,
+			public,
+			loader = 'id'
+		}, {
+			user
+		}) => {
 			const currentUser = await getCurrentUser(user);
 			console.log('current user', currentUser);
 			console.log('users', userStr)
 
-			const users = await loadUsersByUsernames(JSON.parse(userStr));
-			const admins = await loadUsersByUsernames(JSON.parse(adminsStr))
+			const loaderFn = loader === 'id' ? loadUsersByUserIds : loadUsersByUsernames;
+
+			const users = await loaderFn(JSON.parse(userStr));
+			const admins = await loaderFn(JSON.parse(adminsStr))
 
 			const room = await new Room({
 				alias,
 				users: [currentUser],
 				admins: admins,
-				pending: users.filter((({ username }) => username !== currentUser.username)),
+				pending: users.filter(),
 				public,
 			}).save();
 

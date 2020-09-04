@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 
 const jwt = require('jsonwebtoken');
+const { ObjectId } = require('mongodb');
 
 const getUser = token => {
 	try {
@@ -38,6 +39,20 @@ const loadUsersByUsernames = async (usernames) => {
 	return users;
 };
 
+
+const loadUsersByUserIds= async (ids) => {
+	const objectIds = ids.map(id => ObjectId(id));
+	const users = await User.find({
+		_id: {
+			$in: objectIds
+		}
+	});
+	if (!users) {
+		throw new Error("Invalid user ids");
+	}
+	return users;
+};
+
 const generateJWTToken = async (user) => {
 	const token = jwt.sign({
 			id: user._id,
@@ -58,5 +73,6 @@ module.exports = {
 	getUser,
 	getCurrentUser,
 	loadUsersByUsernames,
+	loadUsersByUserIds,
 	generateJWTToken,
 }
