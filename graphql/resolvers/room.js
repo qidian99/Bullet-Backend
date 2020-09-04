@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const User = mongoose.model('User');
 const Room = mongoose.model('Room');
+const Invitation = mongoose.model('Invitation');
 const {
 	getUser,
 	getCurrentUser,
@@ -52,17 +53,25 @@ module.exports = {
 			const users = await loaderFn(JSON.parse(userStr));
 			const admins = await loaderFn(JSON.parse(adminsStr))
 
+			const pendingList = users.filter((user) => user._id !== currentUser._id).map(user => user._id);
+
 			const room = await new Room({
 				alias,
 				users: [currentUser._id],
 				admins: admins.map(admin => admin._id),
-				pending: users.filter((user) => user._id !== currentUser._id).map(user => user._id),
+				pending: [],
 				public,
 			}).save();
 
-			room.roomId = room._id;
+					
+			await Promise.all(pendingList.map((pendingUser) => {
+				return new Invitation({
+					roomId: room._id,
+					userId: pendingUser._id, 
+					accepted: -1,
+				}).save();
+			}));
 
-			console.log(room);
 			return room;
 		},
 	},

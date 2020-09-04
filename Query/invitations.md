@@ -22,3 +22,17 @@ mutation acceptRoomInvitation {
     accepted
   }
 }
+
+
+
+mutation declineRoomInvitation {
+  declineRoomInvitation(invitationId: "5f52a9181594e238b04bb736") {
+    invitationId
+		user {
+      username
+      email
+    }
+    sentAt
+    accepted
+  }
+}
