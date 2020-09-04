@@ -1,6 +1,4 @@
-## Users
-
-```
+# Write your query or mutation here
 query Users {
   users {
     userId
@@ -20,23 +18,3 @@ mutation createUser {
     password
   }
 }
-```
-
-## Rooms
-
-```
-mutation createRoom {
-  createRoom(alias: "room" users:"[1,2,3]" admins:"[1,2,3]" public:false) {
-    roomId
-    alias
-    users {
-  		userId
-      username
-  	}
-    admins {
-  		userId
-      username
-  	}
-  }
-}
-```
