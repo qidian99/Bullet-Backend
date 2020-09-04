@@ -5,6 +5,10 @@ const typedef = gql`
 		userId: ID!
 		username: String!
 		password: String
+		email: String
+		firstname: String
+		lastname: String
+		avatar: String
 	}
 
 	type LoginResponse {
@@ -25,7 +29,8 @@ const typedef = gql`
 	}
 
 	extend type Mutation {
-		createUser(username: String! password: String!): User!
+		createUser(username: String! password: String! email: String firstname: String lastname: String avatar: String): LoginResponse!
+		updateUser(password: String email: String firstname: String lastname: String avatar: String): User!
 		login(username: String! password: String!): LoginResponse!
 		delete(username: String!): User!
 	}
