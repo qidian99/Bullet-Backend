@@ -9,8 +9,8 @@ const Joi = require('joi');
 const { getUser } = require('../../util');
 
 const userInputSchema = Joi.object().keys({ 
-  pid: Joi.string().regex(/^[Aa]\d*$/).required(),
-  password: Joi.string().optional(), 
+  username: Joi.string().required(),
+  password: Joi.string().required(), 
 }); 
 
 
@@ -19,41 +19,35 @@ module.exports = {
 		userId: async(parent) => parent._id,
 	},
 	Mutation: {
-		delete: async(parent, { pid }, info) => {
-			const user = await User.findOneAndDelete({ pid });
+		delete: async(parent, { username }, info) => {
+			const user = await User.findOneAndDelete({ username });
 			if (!user) {
 				throw new Error("User does not exist.");
 			}
 			return user;
 		},
 		createUser: async(parent, args) => {
-			const { input } = args;
-
-			await Joi.validate(input, userInputSchema);
-
-			const { pid, password } = input;
+			const { username, password } = args;
+			console.log('sss', username);
 
 			const hashedPassword = await bcrypt.hash(password, 12);
-			// if (!pid.match('/Aa\d*/g')) {
-			// 	throw new Error('Invalid pid format: ' + pid);
-			// }
 			
-			const user = await User.findOne({ pid });
+			const user = await User.findOne({ username });
+			
 			if(user){
-				throw new Error('Dulplicate pid');
+				throw new Error('Dulplicate username');
 			}
 
 			const newUser = await new User({
-				pid,
+				username,
 				password: hashedPassword,
 			}).save();
-			
+
 			return newUser;
 		},
-		login: async(parent, { input: { pid, password } }, info) => {
-			const user = await User.findOne({ pid });
+		login: async(parent, { username, password }, info) => {
+			const user = await User.findOne({ username });
 
-			console.log('sss', user);
 		
 			if (!user) {
 				throw new Error('User does not exist');
@@ -68,9 +62,9 @@ module.exports = {
 			const token = jwt.sign(
 				{
 					id: user.id,
-					pid: user.pid,
+					username: user.username,
 				},
-				'my-secret-from-env-file-in-prod',
+				process.env.JWT_SECRET,
 				{
 					expiresIn: '3600s', // token will expire in 1h
 				},
@@ -82,9 +76,6 @@ module.exports = {
 		}
 	},
 	Query: {
-		getUserByPid: async(parent, { pid }) =>  {
-			return await User.findOne({ pid });
-		},
 		user: async(parent, { userId }) => {
 			return await User.findById(userId);
 		},
@@ -93,7 +84,7 @@ module.exports = {
 			if (!user) {
 				throw new Error('Not Authenticated.');
 			}
-			return User.findOne({ pid: user.pid });
+			return User.findOne({ username: user.username });
 		},
 		users: async(parent) => {
 			return await User.find({});
@@ -110,7 +101,7 @@ module.exports = {
   		// 	iat: 1577114969,
 			// 	exp: 1577201369 --- in seconds
 			// }
-			return User.findOne({ pid: user.pid });
+			return User.findOne({ username: user.username });
 		}
 	}
 }
