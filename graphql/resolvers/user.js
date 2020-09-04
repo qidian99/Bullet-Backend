@@ -67,7 +67,7 @@ module.exports = {
 				},
 				process.env.JWT_SECRET,
 				{
-					expiresIn: '3600s', // token will expire in 1h
+					expiresIn: '36000s', // token will expire in 1h
 				},
 			)
 			return {
