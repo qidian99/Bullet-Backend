@@ -16,11 +16,20 @@ const getUser = token => {
 };
 
 const getCurrentUser = async (user) => {
-	const userObj = await User.find({ username: user.username })
+	const userObj = await User.findOne({ username: user.username })
 	if (!userObj) {
 		throw new Error("Invalid user in session: User does not exist");
 	}
 	return userObj;
+};
+
+const loadUsersByUsernames = async (usernames) => {
+	const users = await User.find({ username: { $in: usernames } });
+	// console.log('loadUsersByUsernames', users);
+	if (!users) {
+		throw new Error("Invalid usernames");
+	}
+	return users;
 };
 
 module.exports = {
@@ -28,4 +37,5 @@ module.exports = {
 	}),
 	getUser,
 	getCurrentUser,
+	loadUsersByUsernames,
 }
