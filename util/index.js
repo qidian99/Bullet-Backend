@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const User = mongoose.model('User');
+const Room = mongoose.model('Room');
 
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
@@ -29,6 +30,20 @@ const getCurrentUser = async (user) => {
 		throw new Error(ERR_STR);
 	}
 	return userObj;
+};
+
+const getCurrentRoom = async (roomId) => {
+	const ERR_STR = "Invalid room: room does not exist";
+
+	if (!roomId) {
+		throw new Error(ERR_STR);
+	}
+	const room = await Room.findById(roomId);
+
+	if (!room) {
+		throw new Error(ERR_STR);
+	}
+	return room;
 };
 
 const loadUsersByUsernames = async (usernames) => {
@@ -60,11 +75,11 @@ const loadUsersByUserIds= async (ids) => {
 
 const generateJWTToken = async (user) => {
 	const token = jwt.sign({
-			id: user._id,
+			// id: user._id,
 			username: user.username,
 		},
 		process.env.JWT_SECRET, {
-			expiresIn: '36000s', // token will expire in 1h
+			expiresIn: '3600000s', // token will expire in 1000h
 		},
 	);
 
@@ -99,4 +114,5 @@ module.exports = {
 	loadUsersByUserIds,
 	generateJWTToken,
 	changeInvitationStatus,
+	getCurrentRoom,
 }

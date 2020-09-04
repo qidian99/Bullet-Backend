@@ -10,42 +10,45 @@ const {
 	getUser,
 	getCurrentUser,
 	loadUsersByUsernames,
-	loadUsersByUserIds
+	loadUsersByUserIds,
+	getCurrentRoom,
 } = require('../../util');
 const {
 	ObjectId
 } = require('mongodb');
 const bullet = require('../../models/bullet');
+const room = require('../../models/room');
 
 
 module.exports = {
 	Bullet: {
 		bulletId: (parent) => parent._id,
 		user: (parent) => {
-			return User.findById(parent.user);
+			return User.findById(parent.userId);
 		},
 		room: (parent) => {
-			return Room.findById(parent.room);
+			return Room.findById(parent.roomId);
 		}
 	},
 	Mutation: {
 		createBullet: async (parent, {
-			room,
+			roomId,
 			timestamp,
 			content,
 		}, {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
+			const currentRoom = await getCurrentRoom(roomId);
 
 			const bullet = await new Bullet({
-				user: currentUser._id,
-				room,
+				userId: currentUser._id,
+				roomId: currentRoom._id,
 				timestamp,
 				content,
 			}).save();
 
-			console.log(bullet);
+			// console.log(bullet);
 			return bullet;
 		},
 	},
