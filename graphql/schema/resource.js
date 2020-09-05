@@ -3,12 +3,15 @@ const { gql } = require('apollo-server');
 const typedef = gql`
 	type Resource {
 		resourceId: ID!
+		name: String
 		room: Room!
+		url: String
 		description: String
 		tags: [Tag]
 		creator: User!
 		updatedAt: String
 		createdAt: String
+		hidden: Boolean
 	}
 
 	extend type Query {
@@ -18,8 +21,8 @@ const typedef = gql`
 	}
 
 	extend type Mutation {
-		createResource(roomId: ID! description: String tags: JSON): Resource!
-		updateResource(resourceId: ID! description: String tags: JSON): Resource
+		createResource(roomId: ID! name: String! description: String url: String tags: JSON): Resource!
+		updateResource(resourceId: ID! name: String description: String url: String tags: JSON): Resource
 		deleteResource(resourceId: ID!): Resource
 	}
 `

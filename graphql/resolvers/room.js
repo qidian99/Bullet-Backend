@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const User = mongoose.model('User');
 const Room = mongoose.model('Room');
+const Resource = mongoose.model('Resource');
 const Bullet = mongoose.model('Bullet');
 const RoomInvitation = mongoose.model('RoomInvitation');
 const {
@@ -394,7 +395,7 @@ module.exports = {
 
 			return aggregate;
 		},
-		videoTeasersInRoom: async (parent, {
+		resourceTeasersInRoom: async (parent, {
 			roomId,
 			limit = 2,
 		}, {
@@ -416,7 +417,8 @@ module.exports = {
 				{
 					$group: {
 						_id: {
-							source: "$source"
+							// source: "$source"
+							resource: "$type"
 						},
 						updatedAt: {
 							$max: "$updatedAt"
@@ -425,7 +427,7 @@ module.exports = {
 				},
 				{
 					$project: {
-						source: "$_id.source",
+						resource: "$_id.resource",
 						updatedAt: "$updatedAt",
 					}
 				},
@@ -441,9 +443,17 @@ module.exports = {
 				const bullets = await Bullet.aggregate([{
 						$match: {
 							roomId: ObjectId(roomId),
-							source: agg.source,
+							type: agg.resource,
 						}
 					},
+					// {
+					// 	$lookup: {
+					// 		from: "resources",
+					// 		localField: "type",
+					// 		foreignField: "_id",
+					// 		as: "resource"
+					// 	}
+					// },
 					{
 						$sort: {
 							updatedAt: -1
@@ -453,14 +463,16 @@ module.exports = {
 						$limit: limit,
 					}
 				]);
+
+				const resource = await Resource.findById(agg.resource)
 				result.push({
-					source: agg.source,
+					resource,
+					bullets,
 					updatedAt: agg.updatedAt,
-					bullets
 				})
 			}))
 
-			// console.log(result);
+			console.log(result);
 
 			return result;
 		}

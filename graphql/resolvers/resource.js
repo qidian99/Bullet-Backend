@@ -35,7 +35,9 @@ module.exports = {
 	Mutation: {
 		createResource: async (parent, {
 			roomId,
+			name,
 			description,
+			url,
 			tags,
 		}, {
 			user
@@ -46,6 +48,8 @@ module.exports = {
 			const param = {
 				roomId: currentRoom._id,
 				creator: currentUser._id,
+				name,
+				url,	
 				description,
 			}
 
@@ -58,7 +62,9 @@ module.exports = {
 		},
 		updateResource: async (parent, {
 			resourceId,
+			name,
 			description,
+			url,
 			tags,
 		}, {
 			user
@@ -75,8 +81,16 @@ module.exports = {
 				throw new Error("Resource update failed: you are not the resource creator.")
 			}
 
+			if (name) {
+				resource.name = name;
+			}
+			
 			if (description) {
 				resource.description = description;
+			}
+			
+			if (url) {
+				resource.url = url;
 			}
 
 			if (tags) {

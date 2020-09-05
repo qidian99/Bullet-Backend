@@ -14,18 +14,18 @@ const typedef = gql`
 		updatedAt: String
 	}
 
-	type Video {
-		source: String!
-		updatedAt: String!
+	type ResourceResponse {
+		resource: Resource
 		bullets: [Bullet]
+		updatedAt: String!
 	}
 
 	extend type Query {
 		rooms: [Room],
 		allRooms(userId: ID): [Room],
 		room(roomId: ID!): Room
-		videoTeasersInRoom(roomId: ID! limit: Int): [Video]
-		aggregateBulletsInRoom(roomId: ID!): [Video]
+		resourceTeasersInRoom(roomId: ID! limit: Int): [ResourceResponse]
+		aggregateBulletsInRoom(roomId: ID!): [ResourceResponse]
 	}
 
 	extend type Mutation {
