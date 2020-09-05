@@ -19,7 +19,7 @@ const typedef = gql `
 	extend type Query {
 		resources: [Resource]
 		resource(resourceId: ID!): Resource
-		findResources(userId: ID! roomId: ID): [Resource]
+		findResources(userId: ID roomId: ID): [Resource]
 	}
 
 	extend type Mutation {
