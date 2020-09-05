@@ -1,17 +1,15 @@
-# Write your query or mutation here
 query Users {
   users {
-    userId
-    password
-    username
-    email
-    friends {
-      userId
-      email
-      username
-    }
+    ...userFragment
   }
 }
+
+query User {
+  user(username: "peerless07") {
+    ...userFragment
+  }
+}
+
 
 query currentUser {
   currentUser {
@@ -78,7 +76,7 @@ mutation createUserWithProfile {
 }
 
 query findUser {
-	findUser(username: "q") {
+	findUser(username: "peer") {
     ...userSearchFragment
   }
 }
@@ -104,4 +102,17 @@ fragment userSearchFragment on UserSearchResponse {
   lastname
   avatar
   pending
+  isFriend
+}
+
+fragment userFragment on User {
+  userId
+  password
+  username
+  email
+  friends {
+    userId
+    email
+    username
+  }
 }
