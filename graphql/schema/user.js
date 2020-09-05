@@ -23,10 +23,12 @@ const typedef = gql`
 		username: String!
 		password: String
 		email: String
+		friends: [User]
 		firstname: String
 		lastname: String
 		avatar: String
-		pending: String
+		pending: Int
+		isFriend: Int
 	}
 
 	input UserInput {

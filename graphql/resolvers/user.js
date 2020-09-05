@@ -207,24 +207,23 @@ module.exports = {
 						as: "pending"
 					}
 				},
-
-				// {
-				// 	$project: {
-				// 		"pending": {
-				// 			$filter: {
-				// 				input: "$pending",
-				// 				as: "p",
-				// 				cond: {
-				// 					$eq: ["$$p.from", currentUser._id],
-				// 				}
-				// 			}
-				// 		}
-				// 	}
-				// },
+				{
+					$addFields: {
+						isFriend: {
+							$cond: {
+								if: {
+									$in: [currentUser._id, "$friends"]
+								},
+								then: 1,
+								else: 0
+							}
+						}
+					}
+				},
 				{
 					"$project": {
 						"userId": "$_id",
-						"friends": "$friends",
+						"isFriend": "$isFriend",
 						"username": "$username",
 						"firstname": "$firstname",
 						"lastname": "$lastname",
@@ -234,7 +233,11 @@ module.exports = {
 								input: "$pending",
 								as: "p",
 								cond: {
-									$eq: ["$$p.from", ObjectId(currentUser._id)],
+									$and: [{
+										$eq: ["$$p.from", currentUser._id],
+									}, {
+										$eq: ["$$p.accepted", -1],
+									}],
 								}
 							}
 						}
@@ -245,14 +248,6 @@ module.exports = {
 						pending: {
 							$size: "$pending"
 						},
-						friend: {
-							"$cond": [{
-									"$in": [currentUser.friends]
-								},
-								1,
-								0
-							]
-						}
 					}
 				},
 
@@ -297,8 +292,8 @@ module.exports = {
 				// }
 			])
 
-			console.log('users', users);
-			users.forEach(u => console.log('u.pending', u.pending))
+			// console.log('users', users);
+			// users.forEach(u => console.log('u.pending', u.pending))
 
 			return users;
 
