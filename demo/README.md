@@ -100,6 +100,9 @@ verifyToken(token: String!): User!
 验证JWT合法性，用户开发模式
 
 ## Room房间对象
+
+### 模式
+
 ```ts
 type Room {
   roomId: ID!
@@ -125,4 +128,68 @@ type Room {
 8. widgets：房间组件。预留属性，用于组件的延展。不光是视频资源、用户可以选择添加笔记、代办等组件。
 9. updatedAt：房间更新时间
 
-### CRUD操作不做追溯
+### API和返回值
+#### 基本CRUD操作
+```ts
+rooms: [Room] // 所有房间，开发时使用，Query类型
+
+allRooms(userId: ID): [Room] // 特定用户的所有房间，可见度根据房间public属性决定，Query类型
+
+room(roomId: ID!): Room // 单个房间查询，Query类型
+
+createRoom(alias: String! users: JSON! admins: JSON! public: Boolean avatar: String widgets: JSON ): Room! // 创建房间，Mutation类型
+
+updateRoom(roomId: ID! alias: String admins: JSON users: JSON public: Boolean avatar: String widgets: JSON): Room // 更新房间，Mutation类型
+
+deleteRoom(roomId: ID!): Room // 删除房间，Mutation类型
+```
+
+## Bullet弹幕对象
+### 模式
+```ts
+type Bullet {
+  bulletId: ID!
+  user: User!
+  room: Room
+  source: String!
+  resource: Resource!
+  tags: [Tag]
+  row: Int
+  timestamp: Int!
+  content: String!
+  updatedAt: String
+  createdAt: String
+}
+```
+
+### API和返回值
+
+#### 基本CRUD操作
+```ts
+bullets: [Bullet] // 所有弹幕，开发时使用，Query类型
+
+createBullet(roomId: ID! resourceId: ID! source: String! timestamp: Int! row: Int content: String!): Bullet! // 创建弹幕，Mutation类型
+
+updateBullet(bulletId: ID! content: String resourceId: ID tags: JSON timestamp: Int row: Int): Bullet // 更新弹幕，Mutation类型
+
+deleteBullet(bulletId: ID!): Bullet // 删除特定弹幕，Mutation类型
+```
+
+#### 其他查询（面向前端展示需求）
+```ts
+bulletsByUser(roomId: ID source: String resourceId: String userId: ID!): [Bullet]
+```
+获取用户的所有弹幕。目前前端没有应用。预想应用场景：用户可以检索自己的所有历史弹幕和其他互动，进行CRUD操作；用户可以选取部分弹幕添加至个人主页。
+
+```ts
+allBulletsInRoom(roomId: ID!): [Bullet]
+```
+
+房间里所有的弹幕。目前前端没有应用。预想应用场景：用于房间总览，热度排序，全房间弹幕过滤迅速定位资源（Advanced Bullet Search)。
+
+```ts
+allBulletsInResource(roomId: ID! resourceId: ID!): [Bullet]
+```
+
+特定资源下所有的弹幕。前端使用极广，是房间下资源详情页面加载时调用的API。用于资源内弹幕时间线展示。
+
