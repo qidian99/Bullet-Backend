@@ -12,6 +12,7 @@ const {
 	loadUsersByUsernames,
 	loadUsersByUserIds,
 	getCurrentRoom,
+	addTags,
 } = require('../../util');
 const {
 	ObjectId
@@ -49,7 +50,7 @@ module.exports = {
 				roomId: currentRoom._id,
 				source,
 				type,
-				tags: tags || [],
+				tags: addTags(tags, null),
 				timestamp,
 				content,
 			}).save();
@@ -57,6 +58,47 @@ module.exports = {
 			// console.log(bullet);
 			return bullet;
 		},
+		updateBullet: async (parent, {
+			bulletId,
+			content,
+			type,
+			tags,
+			timestamp
+		}, {
+			user
+		}) => {
+			const currentUser = await getCurrentUser(user);
+			const bullet = await Bullet.findById(bulletId);
+
+			if (!bullet) {
+				throw new Error("Bullet update failed: bullet does not exist.")
+			}
+
+			if (bullet.userId.toString() !== currentUser._id.toString()) {
+				throw new Error("Bullet update failed: you are not the bullet sender.")
+			}
+
+			if (content) {
+				bullet.content = content;
+			}
+
+			if (type) {
+				bullet.type = type;
+			}
+
+			if (tags) {
+				bullet.tags = addTags(JSON.parse(tags), bullet.tags);
+			}
+
+			if (timestamp) {
+				bullet.timestamp = timestamp
+			}
+
+			bullet.save();
+
+			return bullet;
+
+		},	
 		deleteBullet: async (parent, {
 			bulletId
 		}, {

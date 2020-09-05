@@ -22,6 +22,7 @@ const typedef = gql`
 
 	extend type Mutation {
 		createBullet(roomId: ID! source: String! timestamp: Int! content: String!): Bullet!
+		updateBullet(bulletId: ID! content: String type: String tags: JSON timestamp: Int): Bullet
 		deleteBullet(bulletId: ID!): Bullet
 	}
 `
