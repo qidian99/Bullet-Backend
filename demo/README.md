@@ -144,6 +144,34 @@ updateRoom(roomId: ID! alias: String admins: JSON users: JSON public: Boolean av
 deleteRoom(roomId: ID!): Room // 删除房间，Mutation类型
 ```
 
+
+#### 复杂查询
+
+```ts
+resourceTeasersInRoom(roomId: ID! limit: Int): [ResourceResponse]
+```
+
+获取给定房间（roomId）中的所有资源预告（上限由limit）决定。
+1. 聚合有效性判断（如果用户和房间的组合不符合规则，放弃聚合）
+2. 向Bullet类进行如下操作获得资源组<BR>
+    1. 过滤该房间下（roomId）所有弹幕 
+    2. 根据资源ID（resourceId）进行组合
+    3. 获取资源内最后一条弹幕的更新时间（max）作为聚合记录的排序条件
+    4. 只投影获取资源ID和更新时间
+    5. 更新时间降序排列
+3. 对于每个资源组<BR>
+    1. 获取该房间（roomId）、该资源（resourceId）的弹幕
+    2. 更新时间降序排列
+    3. 上限为limit个，预设值为2
+    4. 填充两个数组，一个结果对象数组、一个非空资源组
+4. 对于每一个房间下的资源
+    1. 判断该资源（roomId）是否在非空资源组中
+    2. 如果该资源不在非空资源组中，说明该资源聚合后没有弹幕，手工添加到结果对象数组中
+
+
+具体实现参见 `graphql/resolvers/room.js:328`。
+
+
 ## Bullet弹幕对象
 ### 模式
 ```ts
@@ -161,6 +189,18 @@ type Bullet {
   createdAt: String
 }
 ```
+
+1.bulletId：弹幕ID，唯一标识
+2.user：弹幕发送者
+3.room：弹幕从属房间
+4.source：弹幕源(URI类型，比如视频URL)
+5.resource：对应资源（同一房间中）
+6.tags：弹幕标签（详情见Tag文档）
+7.row：弹幕行，用于插件注入展示
+8.timestamp：弹幕时间戳，可以理解为溢出屏幕的弹幕列
+9.content：弹幕内容
+10.updatedAt：弹幕更新时间
+11.createdAt：弹幕创建时间
 
 ### API和返回值
 

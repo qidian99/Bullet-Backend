@@ -27,7 +27,6 @@ const typedef = gql `
 		allRooms(userId: ID): [Room],
 		room(roomId: ID!): Room
 		resourceTeasersInRoom(roomId: ID! limit: Int): [ResourceResponse]
-		aggregateBulletsInRoom(roomId: ID!): [ResourceResponse]
 	}
 
 	extend type Mutation {
