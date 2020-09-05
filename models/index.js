@@ -4,3 +4,4 @@ require('./bullet');
 require('./invitation');
 require('./friend');
 require('./tag');
+require('./resource');
