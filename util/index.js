@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const Room = mongoose.model('Room');
 const Tag = mongoose.model('Tag');
+const Resource = mongoose.model('Resource');
 
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
@@ -47,6 +48,20 @@ const getCurrentRoom = async (roomId) => {
 		throw new Error(ERR_STR);
 	}
 	return room;
+};
+
+const getCurrentResource = async (resourceId) => {
+	const ERR_STR = "Resource retrieval failed: resource does not exist";
+
+	if (!resourceId) {
+		throw new Error(ERR_STR);
+	}
+	const resource = await Resource.findById(resourceId);
+
+	if (!resource) {
+		throw new Error(ERR_STR);
+	}
+	return resource;
 };
 
 const loadUsersByUsernames = async (usernames) => {
@@ -163,6 +178,7 @@ module.exports = {
 	generateJWTToken,
 	changeInvitationStatus,
 	getCurrentRoom,
+	getCurrentResource,
 	addTags,
 	INVITATION_TYPES,
 	INVITATION_ACTIONS,

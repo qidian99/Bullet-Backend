@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = mongoose.model('User');
 const Room = mongoose.model('Room');
 const Bullet = mongoose.model('Bullet');
+const Resource = mongoose.model('Resource');
 const Tag = mongoose.model('Tag');
 
 const {
@@ -13,6 +14,7 @@ const {
 	loadUsersByUsernames,
 	loadUsersByUserIds,
 	getCurrentRoom,
+	getCurrentResource,
 	addTags,
 } = require('../../util');
 const {
@@ -25,6 +27,9 @@ module.exports = {
 		bulletId: (parent) => parent._id,
 		user: (parent) => {
 			return User.findById(parent.userId);
+		},
+		type: (parent) => {
+			return Resource.findById(parent.type);
 		},
 		room: (parent) => {
 			return Room.findById(parent.roomId);
@@ -44,12 +49,13 @@ module.exports = {
 		}) => {
 			const currentUser = await getCurrentUser(user);
 			const currentRoom = await getCurrentRoom(roomId);
+			const currentResource = await getCurrentResource(type);
 
 			const param = {
 				userId: currentUser._id,
 				roomId: currentRoom._id,
 				source,
-				type,
+				type: currentResource._id,
 				timestamp,
 				content,
 			}
@@ -88,7 +94,8 @@ module.exports = {
 			}
 
 			if (type) {
-				bullet.type = type;
+				const currentResource = await getCurrentResource(type);
+				bullet.type = currentResource._id;
 			}
 
 			if (tags) {
@@ -183,17 +190,19 @@ module.exports = {
 
 			return bullets;
 		},
-		allBulletsInVideo: async (parent, {
+		allBulletsInResource: async (parent, {
 			roomId,
-			source
+			type
 		}, {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
+			const currentResource = await getCurrentResource(type);
+			const currentRoom = await getCurrentRoom(roomId);
 
 			const bullets = await Bullet.find({
-				roomId,
-				source
+				roomId: currentRoom._id,
+				type: currentResource._id
 			}, null, {
 				sort: {
 					updatedAt: -1
