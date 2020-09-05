@@ -1,7 +1,9 @@
 mutation createResource {
   createResource(
-    roomId: "5f53b3e4d008084e94c1442c" 
+    roomId: "5f53b3e4d008084e94c1442c"
+    name: "New Resource"
     description: "This is the video source in Room Niubi" 
+    url: "http://haha.ha.com"
     tags: "[\"Bilibili\",\"Aiqiyi\"]"
   ) {
     ...resourceFragment
@@ -56,7 +58,9 @@ fragment resourceFragment on Resource {
     roomId
     alias
   }
+  name
   description
+  url
   tags {
     name
     count

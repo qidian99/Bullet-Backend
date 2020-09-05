@@ -77,22 +77,26 @@ query allRooms {
 
 
 query aggregateBulletsInRoom {
-  aggregateBulletsInRoom(roomId: "5f52bd529a1f761f8c44eae3") {
-  	source
-    updatedAt
+  aggregateBulletsInRoom(roomId: "5f533cf50ee8ec34c0d0d2b5") {
+  	resource {
+      ...resourceFragment
+    }
     bullets {
       ...bulletFragment
     }
+    updatedAt
   }
 }
 
-query videoTeasersInRoom {
-  videoTeasersInRoom(roomId: "5f52bd529a1f761f8c44eae3") {
-  	source
-    updatedAt
+query resourceTeasersInRoom {
+  resourceTeasersInRoom(roomId: "5f533cf50ee8ec34c0d0d2b5") {
+  	resource {
+      ...resourceFragment
+    }
     bullets {
       ...bulletFragment
     }
+    updatedAt
   }
 }
 
@@ -114,4 +118,27 @@ fragment bulletFragment on Bullet {
     name
     count
   }
+}
+
+
+
+fragment resourceFragment on Resource {
+  resourceId
+  room {
+    roomId
+    alias
+  }
+  name
+  description
+  url
+  tags {
+    name
+    count
+  }
+  creator {
+    userId
+    username
+  }
+  updatedAt
+	createdAt
 }
