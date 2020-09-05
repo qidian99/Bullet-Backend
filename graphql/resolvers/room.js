@@ -124,7 +124,7 @@ module.exports = {
 				currentRoom.alias = alias;
 			}
 
-			if (users) {				
+			if (userStr) {			
 				const users = await loaderFn(JSON.parse(userStr));
 				const pendingList = users.filter((user) => {
 					return currentRoom.map(({ _id }) => _id.toString()).includes(user._id.toString());
@@ -140,7 +140,7 @@ module.exports = {
 				currentRoom.users = users;
 			}
 
-			if (admins) {
+			if (adminsStr) {
 				const admins = await loaderFn(JSON.parse(adminsStr))
 				if (!adminsStr.includes(currentUser._id.toString())) {
 					admins.push(currentUser);
@@ -148,11 +148,11 @@ module.exports = {
 			}
 
 			if (public !== undefined) {
-				newRoom.public = public;
+				currentRoom.public = public;
 			}
 
 			if (widgets) {
-				newRoom.widgets = JSON.parse(widgets);
+				currentRoom.widgets = JSON.parse(widgets);
 			}
 			
 			if (avatar) {
