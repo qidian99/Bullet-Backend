@@ -300,7 +300,7 @@ module.exports = {
 
 			return aggregate;
 		},
-		bulletTeasersInRoom: async (parent, {
+		videoTeasersInRoom: async (parent, {
 			roomId,
 			limit = 2,
 		}, {
