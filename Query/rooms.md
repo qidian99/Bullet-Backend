@@ -73,6 +73,17 @@ query allRooms {
 query aggregateBulletsInRoom {
   aggregateBulletsInRoom(roomId: "5f52bd529a1f761f8c44eae3") {
   	source
+    updatedAt
+    bullets {
+      ...bulletFragment
+    }
+  }
+}
+
+query videoTeasersInRoom {
+  videoTeasersInRoom(roomId: "5f52bd529a1f761f8c44eae3") {
+  	source
+    updatedAt
     bullets {
       ...bulletFragment
     }
