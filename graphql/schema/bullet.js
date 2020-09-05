@@ -10,6 +10,7 @@ const typedef = gql `
 		source: String!
 		resource: Resource!
 		tags: [Tag]
+		row: Int
     timestamp: Int!
 		content: String!
 		updatedAt: String
@@ -24,8 +25,8 @@ const typedef = gql `
 	}
 
 	extend type Mutation {
-		createBullet(roomId: ID! resourceId: ID! source: String! timestamp: Int! content: String!): Bullet!
-		updateBullet(bulletId: ID! content: String resourceId: ID tags: JSON timestamp: Int): Bullet
+		createBullet(roomId: ID! resourceId: ID! source: String! timestamp: Int! row: Int content: String!): Bullet!
+		updateBullet(bulletId: ID! content: String resourceId: ID tags: JSON timestamp: Int row: Int): Bullet
 		deleteBullet(bulletId: ID!): Bullet
 	}
 `

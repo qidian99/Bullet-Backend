@@ -31,6 +31,10 @@ const BulletSchema = new Schema({
     type: Number,
     required: true
   },
+  row: {
+    type: Number,
+    required: false
+  },
   content: {
     type: String,
     required: true

@@ -44,6 +44,7 @@ module.exports = {
 		createBullet: async (parent, {
 			roomId,
 			timestamp,
+			row,
 			content,
 			source,
 			resourceId,
@@ -61,6 +62,7 @@ module.exports = {
 				source,
 				resourceId: currentResource._id,
 				timestamp,
+				row,
 				content,
 			}
 
@@ -81,7 +83,8 @@ module.exports = {
 			content,
 			resourceId,
 			tags,
-			timestamp
+			timestamp,
+			row,
 		}, {
 			user
 		}) => {
@@ -111,6 +114,10 @@ module.exports = {
 
 			if (timestamp) {
 				bullet.timestamp = timestamp
+			}
+
+			if (row) {
+				bullet.row = row
 			}
 
 			bullet.save();
