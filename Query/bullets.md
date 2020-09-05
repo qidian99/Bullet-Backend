@@ -1,9 +1,9 @@
 mutation createBullet {
   createBullet(
     roomId: "5f52bd529a1f761f8c44eae3" 
-    source: "Bilibili" 
+    source: "Aiyiqi" 
     timestamp: 12324535 
-    content: "hahahaha"
+    content: "3"
   ) {
     ...bulletFragment
   }
@@ -39,11 +39,25 @@ query allBulletsInRoom {
   }
 }
 
+
+query allBulletsInVideo {
+  allBulletsInVideo(roomId: "5f52bd529a1f761f8c44eae3" source: "Aiyiqi") {
+      ...bulletFragment
+  }
+}
+
+
 query bulletsByUser {
-  bulletsByUser(userId: "5f52bc8de3221e1950a55fd8" roomId: "5f52bd529a1f761f8c44eae3") {
+  bulletsByUser(
+    userId: "5f52bc8de3221e1950a55fd8" 
+    roomId: "5f52bd529a1f761f8c44eae3"
+    source: "Bilibili"
+  ) {
     ...bulletFragment
   }
 }
+
+
 
 
 fragment bulletFragment on Bullet {

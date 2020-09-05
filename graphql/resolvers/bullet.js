@@ -126,11 +126,16 @@ module.exports = {
 	},
 	Query: {
 		bullets: async (parent) => {
-			return await Bullet.find({});
+			return await Bullet.find({}, null, {
+				sort: {
+					updatedAt: -1
+				}
+			});
 		},
 		bulletsByUser: async (parent, {
 			userId,
 			roomId,
+			source,
 			type
 		}, {
 			user
@@ -143,10 +148,18 @@ module.exports = {
 				query.roomId = roomId;
 			}
 
+			if (source) {
+				query.source = source;
+			}
+
 			if (type) {
 				query.type = type;
 			}
-			const bullets = await Bullet.find(query);
+			const bullets = await Bullet.find(query, null, {
+				sort: {
+					updatedAt: -1
+				}
+			});
 			return bullets;
 		},
 		allBulletsInRoom: async (parent, {
@@ -159,6 +172,29 @@ module.exports = {
 
 			const bullets = await Bullet.find({
 				roomId
+			}, null, {
+				sort: {
+					updatedAt: -1
+				}
+			});
+
+			return bullets;
+		},
+		allBulletsInVideo: async (parent, {
+			roomId,
+			source
+		}, {
+			user
+		}) => {
+			const currentUser = await getCurrentUser(user);
+
+			const bullets = await Bullet.find({
+				roomId,
+				source
+			}, null, {
+				sort: {
+					updatedAt: -1
+				}
 			});
 
 			return bullets;

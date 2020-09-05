@@ -13,7 +13,7 @@ mutation createFriendInvitation {
 
 
 mutation acceptFriendInvitation {
-  acceptFriendInvitation(invitationId: "5f52fb655db3da5e58cab0ea") {
+  acceptFriendInvitation(invitationId: "5f5302a335ce1221041d5d2d") {
 		...friendInvitationFragment
   }
 }
