@@ -40,6 +40,52 @@ module.exports = {
 		sentAt: (parent) => parent.createdAt,
 	},
 	Mutation: {
+		deleteFriend: async (parent, {
+			userId
+		}, {
+			user
+		}) => {
+			const currentUser = await getCurrentUser(user);
+			// console.log(currentUser.friends);
+
+			if (!currentUser.friends.includes(ObjectId(userId))) {
+				throw new Error("Friend deletion failed: you guys are not friends in the first place");
+			}
+
+			const oldFriend = await User.findById(userId);
+
+			// console.log(oldFriend.friends.filter((id) => {
+			// 	return id.toString() !== currentUser._id.toString()
+			// }));
+
+			oldFriend.friends = oldFriend.friends.filter((id) => id.toString() !== currentUser._id.toString())
+			oldFriend.save();
+			currentUser.friends = currentUser.friends.filter((id) => id.toString() !== oldFriend._id.toString())
+			currentUser.save();
+
+			const inv = await FriendInvitation.update({
+				$or: [{
+						from: currentUser._id,
+						to: oldFriend._id,
+						accepted: 1,
+					},
+					{
+						from: oldFriend._id,
+						to: currentUser._id,
+						accepted: 1,
+					}
+				]
+			}, {
+				accepted: -2,
+			}, {
+				multi: true
+			});;
+
+			// console.log(inv);
+			// should be { n: 1, nModified: 1, ok: 1 }
+			return oldFriend;
+
+		},
 		acceptFriendInvitation: async (parent, {
 			invitationId,
 		}, {
@@ -125,7 +171,9 @@ module.exports = {
 
 			const invitations = await FriendInvitation.find({
 				to: currentUser._id,
-				accepted: { $ne: 1 },
+				accepted: {
+					$ne: 1
+				},
 			})
 			return invitations;
 		}

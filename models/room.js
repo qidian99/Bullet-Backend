@@ -9,6 +9,7 @@ const RoomSchema = new Schema({
   public: { type: Boolean, required: false }, // Whether the room is public or not
   widgets: { type: Array, required: false },
   avatar: { type: String, required: false },
+  creator: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 }, {
   timestamps: true,
 });
