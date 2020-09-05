@@ -22,7 +22,10 @@ const bullet = require('../../models/bullet');
 const {
 	find
 } = require('../../models/bullet');
-const { INVITATION_TYPES, INVITATION_ACTIONS } = require('../../util/types');
+const {
+	INVITATION_TYPES,
+	INVITATION_ACTIONS
+} = require('../../util/types');
 
 
 module.exports = {
@@ -115,12 +118,19 @@ module.exports = {
 				}
 			});
 		},
-		roomInvitations: async (parent, _, { user }) => {
+		roomInvitations: async (parent, {
+			history
+		}, {
+			user
+		}) => {
 			const currentUser = await getCurrentUser(user);
-
-			const invitations = await RoomInvitation.find({ 
+			const query = {
 				userId: currentUser._id,
-			}, null, {
+			}
+			if (history !== true) {
+				query.accepted = -1;
+			}
+			const invitations = await RoomInvitation.find(query, null, {
 				sort: {
 					updatedAt: -1
 				}

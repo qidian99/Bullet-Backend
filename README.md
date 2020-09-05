@@ -27,10 +27,12 @@
 
 ## 安装
 1. 本地下载MongoDB。如果是Macbook可以`brew install`；如果是Windows建议安装MongoDB Compass Community版本。如果是其他电脑建议买一台Macbook或者Windows。
+    * 本项目同样部署有MongoDB Atlas数据库，需要Demo可以联系我
 
 2. `npm install`，会下载所有的依赖
 
 3. 启动
+    * 在项目根目录创建`.env`文件，里面随便给个`JWT_SECRET=爱给啥给啥`，用于JWT加密解密。
     * `npm start`
     * `npx nodemon index.js`
 

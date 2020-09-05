@@ -162,18 +162,30 @@ module.exports = {
 	},
 	Query: {
 		allFriendInvitations: async () => {
-			return FriendInvitation.find({});
+			return FriendInvitation.find({}, null, {
+				sort: {
+					updatedAt: -1,
+				}
+			});
 		},
-		friendInvitations: async (parent, _, {
+		friendInvitations: async (parent, {
+			history
+		}, {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
 
-			const invitations = await FriendInvitation.find({
+			const query = {
 				to: currentUser._id,
-				accepted: {
-					$ne: 1
-				},
+			}
+			if (history !== true) {
+				query.accepted = -1;
+			}
+
+			const invitations = await FriendInvitation.find(query, null, {
+				sort: {
+					updatedAt: -1
+				}
 			})
 			return invitations;
 		}

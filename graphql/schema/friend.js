@@ -10,7 +10,7 @@ const typedef = gql`
 	}
 
 	extend type Query {
-		friendInvitations: [FriendInvitation],
+		friendInvitations(history: Boolean): [FriendInvitation],
 		allFriendInvitations: [FriendInvitation],
 	}
 

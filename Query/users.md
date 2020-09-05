@@ -75,7 +75,7 @@ mutation createUserWithProfile {
 
 mutation updateUser {
   updateUser(
-     email: "qidian@ss.om" 
+    email: "qidian@ss.om" 
     firstname: "Dian" 
     lastname: "Qi"
     avatar: "ahah"
@@ -119,6 +119,7 @@ fragment userFragment on User {
   password
   username
   email
+  avatar
   friends {
     userId
     email
@@ -131,4 +132,5 @@ fragment userSmallFragment on User {
   password
   username
   email
+  avatar
 }

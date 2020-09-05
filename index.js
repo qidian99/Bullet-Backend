@@ -13,7 +13,10 @@ const resolvers = require('./graphql/resolvers')
 const cors = require('./middlewares/cors');
 const errorHandler = require('./middlewares/errorHandler');
 
-const url = 'mongodb://localhost:27017/bullet';
+
+// console.log(process.env.MONGO_PASSWORD)
+const url = `mongodb+srv://tritonbyte:${process.env.MONGO_PASSWORD}@bullet.yx3on.mongodb.net/bullet?retryWrites=true&w=majority`
+// const url = 'mongodb://localhost:27017/bullet';
 
 const app = express();
 
