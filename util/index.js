@@ -24,7 +24,7 @@ const getUser = token => {
 
 const getCurrentUser = async (user) => {
 
-	const ERR_STR = "Invalid user in session: User does not exist";
+	const ERR_STR = "Current user retrieval failed: user does not exist";
 	if (!user) {
 		throw new Error(ERR_STR);
 	}
@@ -38,7 +38,7 @@ const getCurrentUser = async (user) => {
 };
 
 const getCurrentRoom = async (roomId) => {
-	const ERR_STR = "Invalid room: room does not exist";
+	const ERR_STR = "Room retrieval failed: room does not exist";
 
 	if (!roomId) {
 		throw new Error(ERR_STR);
@@ -89,7 +89,7 @@ const loadUsersByUsernames = async (usernames) => {
 	});
 	// console.log('loadUsersByUsernames', users);
 	if (!users) {
-		throw new Error("Invalid usernames");
+		throw new Error("Users retrieval failed: invalid usernames");
 	}
 	return users;
 };
@@ -103,7 +103,7 @@ const loadUsersByUserIds= async (ids) => {
 		}
 	});
 	if (!users) {
-		throw new Error("Invalid user ids");
+		throw new Error("Users retrieval failed: invalid user ids");
 	}
 	return users;
 };
@@ -124,12 +124,12 @@ const generateJWTToken = async (user) => {
 const changeInvitationStatus = (invitation, mode = 'accept') => {
 	
 	if (!invitation) {
-		throw new Error("Invitation object does not exist")
+		throw new Error("Invitation update failed: invitation object does not exist")
 	}
 
 	// console.log(invitation)
 	if (invitation.accepted != -1) {
-		throw new Error("Cannot modify past invitation")
+		throw new Error("Invitation update failed: cannot modify past invitation")
 	}
 
 	if (mode === INVITATION_ACTIONS.ACCEPT) {
@@ -189,7 +189,7 @@ const deleteBullet = async (bullet) => {
 	await addTags([], bullet.tags);
 	const deleteRes = await Bullet.deleteOne({ _id: bullet._id });
 	if (deleteRes.deletedCount !== 1 || !deleteRes.ok) {
-		throw new Error("An error occurred when deleting the bullet.");
+		throw new Error("Bullet deletion failed: an error occurred when deleting the bullet.");
 	}
 }
 

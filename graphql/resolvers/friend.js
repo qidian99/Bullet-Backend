@@ -138,7 +138,7 @@ module.exports = {
 			// Check if user in the room
 			const toUser = await User.findById(to);
 			if (!toUser) {
-				throw new Error("Friend additon failed: You are sending friend request to a black hole\.")
+				throw new Error("Friend addition failed: You are sending friend request to a black hole\.")
 			}
 
 			// Check if a friend invitation has already been sent
@@ -151,7 +151,7 @@ module.exports = {
 			});
 
 			if (inv) {
-				throw new Error("Either you are already friend with the user, or you have an ongoing friend request.")
+				throw new Error("Friend addition failed: either you are already friend with the user, or you have an ongoing friend request.")
 			}
 
 			const invitation = await new FriendInvitation({
@@ -184,7 +184,7 @@ module.exports = {
 			});
 
 			if (inv) {
-				throw new Error("Either you are already friend with the user, or you have an ongoing friend request.")
+				throw new Error("Friend addition failed: either you are already friend with the user, or you have an ongoing friend request.")
 			}
 
 			const invitation = await new FriendInvitation({

@@ -91,13 +91,13 @@ module.exports = {
 			});
 
 			if (!room) {
-				throw new Error("User is not the admin of the room, so he/she cannot send invitation");
+				throw new Error("Room invitation failed: user is not the admin of the room, so he/she cannot send invitation");
 			}
 
 			const invitationUser = await User.findById(userId);
 
 			if (!invitationUser) {
-				throw new Error("The invited user does not exist.")
+				throw new Error("Room invitation failed: the invited user does not exist.")
 			}
 
 

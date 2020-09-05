@@ -41,7 +41,7 @@ module.exports = {
 				username
 			});
 			if (!user) {
-				throw new Error("User does not exist.");
+				throw new Error("User deletion failed: user does not exist.");
 			}
 			return user;
 		},
@@ -63,7 +63,7 @@ module.exports = {
 			});
 
 			if (user) {
-				throw new Error('Dulplicate username');
+				throw new Error('User creation failed: dulplicate username');
 			}
 
 			const newUser = await new User({
@@ -130,13 +130,13 @@ module.exports = {
 			});
 
 			if (!user) {
-				throw new Error('User does not exist');
+				throw new Error('User login failed: user does not exist');
 			}
 
 			const passwordMatch = await bcrypt.compare(password, user.password)
 
 			if (!passwordMatch) {
-				throw new Error('Incorrect password');
+				throw new Error('User login failed: incorrect password');
 			}
 
 			const token = generateJWTToken(user);
@@ -153,14 +153,14 @@ module.exports = {
 		}) => {
 			if (userId) return User.findById(userId);
 			if (username) return User.findOne({ username });
-			throw new Error("Neither userId nor username is provided. You are chilling")
+			throw new Error("User retrieval failed: neither userId nor username is provided. You are chilling")
 		},
 		currentUser: async (parent, args, {
 			user
 		}) => {
 			// this if statement is our authentication check
 			if (!user) {
-				throw new Error('Not Authenticated.');
+				throw new Error('Current user retrieval failed: not Authenticated.');
 			}
 			return User.findOne({
 				username: user.username
@@ -306,9 +306,9 @@ module.exports = {
 		}) => {
 			const user = getUser(token)
 			if (!user) {
-				throw new Error("Invalid token.");
+				throw new Error("Token verification failed: invalid token.");
 			}
-			console.log(user);
+			// console.log(user);
 			// { 
 			// 	id: '5e00dd20c842b116924ecfdc',
 			// 	username: 'qidian',
