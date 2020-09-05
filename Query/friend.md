@@ -11,6 +11,13 @@ mutation createFriendInvitation {
   }
 }
 
+mutation addFriendWithoutInvitation {
+  addFriendWithoutInvitation(to: "5f533a1a873c383d503403ad") {
+    ...friendInvitationFragment
+  }
+}
+
+
 
 mutation acceptFriendInvitation {
   acceptFriendInvitation(invitationId: "5f533eb39f8f305ee4e15f77") {

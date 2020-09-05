@@ -103,6 +103,9 @@ module.exports = {
 			if (!fromUser.friends) {
 				fromUser.friends = []
 			}
+			if (!currentUser.friends) {
+				currentUser.friends = []
+			}
 			fromUser.friends.push(currentUser._id);
 			fromUser.save();
 			currentUser.friends.push(fromUser._id);
@@ -135,7 +138,7 @@ module.exports = {
 			// Check if user in the room
 			const toUser = await User.findById(to);
 			if (!toUser) {
-				throw new Error("You are sending friend request to a black hole.")
+				throw new Error("Friend additon failed: You are sending friend request to a black hole\.")
 			}
 
 			// Check if a friend invitation has already been sent
@@ -156,6 +159,47 @@ module.exports = {
 				to: toUser._id,
 				accepted: -1,
 			}).save();
+
+			return invitation;
+		},
+		addFriendWithoutInvitation: async (parent, {
+			to,
+		}, {
+			user
+		}) => {
+			const currentUser = await getCurrentUser(user);
+			// Check if user in the room
+			const toUser = await User.findById(to);
+			if (!toUser) {
+				throw new Error("Friend additon failed: You are sending friend request to a black hole\.")
+			}
+
+			// Check if a friend invitation has already been sent
+			const inv = await FriendInvitation.findOne({
+				from: currentUser._id,
+				to: toUser._id,
+				accepted: {
+					$in: [1, -1],
+				}
+			});
+
+			if (inv) {
+				throw new Error("Either you are already friend with the user, or you have an ongoing friend request.")
+			}
+
+			const invitation = await new FriendInvitation({
+				from: currentUser._id,
+				to: toUser._id,
+				accepted: 1,
+			}).save();
+
+			// Manually push to each other's friend list
+			if (!currentUser.friends) currentUser.friends = [];
+			if (!toUser.friends) toUser.friends = [];
+			currentUser.friends.push(toUser._id);
+			currentUser.save();
+			toUser.friends.push(currentUser._id);
+			toUser.save();
 
 			return invitation;
 		},
