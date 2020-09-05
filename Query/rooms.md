@@ -1,11 +1,11 @@
 mutation createRoom {
-  createRoom(alias: "room6" users:"[\"5f52bc83e3221e1950a55fd6\",\"5f52bc89e3221e1950a55fd7\",\"5f52bc8de3221e1950a55fd8\"]" admins:"[\"5f52bc83e3221e1950a55fd6\"]" public:true) {
+  createRoom(alias: "room1" users:"[\"5f533a1a873c383d503403ad\",\"5f533a24873c383d503403af\"]" admins:"[\"5f533a24873c383d503403af\"]" public:true) {
     ...roomFragment
   }
 }
 
 mutation deleteRoom {
-	deleteRoom(roomId: "5f52fec86cac725224886fbc") {
+	deleteRoom(roomId: "5f533c810ee8ec34c0d0d2b2") {
     ...roomFragment
   }
 }

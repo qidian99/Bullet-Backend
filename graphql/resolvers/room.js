@@ -65,15 +65,27 @@ module.exports = {
 			const currentUser = await getCurrentUser(user);
 
 			const loaderFn = loader === 'id' ? loadUsersByUserIds : loadUsersByUsernames;
-			const users = await loaderFn(JSON.parse(userStr));
-			const admins = await loaderFn(JSON.parse(adminsStr))
+			const usersJSON = JSON.parse(userStr);
+			const users = await loaderFn(usersJSON);
+			const adminsJSON = JSON.parse(adminsStr);
+			const admins = await loaderFn(adminsJSON)
 
 			const pendingList = users.filter((user) => {
 				// console.log(user._id.toString(), currentUser._id.toString(), user._id.toString() !== currentUser._id.toString())
 				return user._id.toString() !== currentUser._id.toString()
 			}).map(user => user._id);
 
-			if (!adminsStr.includes(currentUser._id.toString())) {
+			// Check that all admins is included in user list
+			let adminIncludesCurrentUser = false;
+			adminsJSON.forEach(adminId => {
+				if (!usersJSON.includes(adminId)) {
+					throw new Error("Room creation failed: all admins must be in user list.");
+				}
+				if (adminId === currentUser._id.toString) {
+					adminIncludesCurrentUser = true;
+				}
+			})
+			if (!adminIncludesCurrentUser) {
 				admins.push(currentUser);
 			}
 
@@ -186,6 +198,16 @@ module.exports = {
 			if (!deleteRes.ok || deleteRes.deletedCount !== 1) {
 				throw new Error("Room deletion fail: some error ocurred during deletion process");
 			}
+
+			// Invalidate all pending room invitations
+			await RoomInvitation.updateMany({
+				roomId,
+				accepted: -1
+			}, {
+				$set: {
+					accepted: -2
+				}
+			})
 
 			return currentRoom;
 		}
