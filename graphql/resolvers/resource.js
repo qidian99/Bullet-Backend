@@ -98,6 +98,9 @@ module.exports = {
 			// TODO: add admin priviledges to update resource
 			const resource = await Resource.findOne({ _id: resourceId, creator: currentUser._id });
 			
+			// Decrement all tags
+			await addTags([], resource.tags);
+
 			if (!resource) {
 				throw new Error("Resource deletion failed: no resource found. Either you are not the author or the bulletId is invalid.");
 			}
@@ -119,7 +122,7 @@ module.exports = {
 			});
 		},
 		resource: async (parent, { resourceId }, { user }) => {
-			return await Resource.findByID(resourceId);
+			return await Resource.findById(resourceId);
 		},
 		findResources: async (parent, {
 			userId,

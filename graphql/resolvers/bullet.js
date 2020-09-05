@@ -116,6 +116,9 @@ module.exports = {
 				throw new Error("No bullet found. Either you are not the author or the bulletId is invalid.");
 			}
 
+			// Decrement all tags
+			await addTags([], bullet.tags);
+
 			const deleteRes = await Bullet.deleteOne({ _id: bullet._id });
 			if (deleteRes.deletedCount !== 1 || !deleteRes.ok) {
 				throw new Error("An error occurred when deleting the bullet.");
