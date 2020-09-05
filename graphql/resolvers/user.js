@@ -148,9 +148,12 @@ module.exports = {
 	},
 	Query: {
 		user: async (parent, {
-			userId
+			userId,
+			username,
 		}) => {
-			return await User.findById(userId);
+			if (userId) return User.findById(userId);
+			if (username) return User.findOne({ username });
+			throw new Error("Neither userId nor username is provided. You are chilling")
 		},
 		currentUser: async (parent, args, {
 			user

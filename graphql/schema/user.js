@@ -23,7 +23,6 @@ const typedef = gql`
 		username: String!
 		password: String
 		email: String
-		friends: [User]
 		firstname: String
 		lastname: String
 		avatar: String
@@ -38,7 +37,7 @@ const typedef = gql`
 
 	extend type Query {
 		users: [User],
-		user(userId: ID!): User!
+		user(userId: ID username: String): User!
 		currentUser: User
 		verifyToken(token: String!): User!
 		findUser(username: String): [UserSearchResponse]
