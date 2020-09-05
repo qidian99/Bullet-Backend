@@ -184,6 +184,15 @@ const addTags = async (newTags, oldTags) => {
 	return newTags;
 }
 
+const deleteBullet = async (bullet) => {
+	// Decrement all tags
+	await addTags([], bullet.tags);
+	const deleteRes = await Bullet.deleteOne({ _id: bullet._id });
+	if (deleteRes.deletedCount !== 1 || !deleteRes.ok) {
+		throw new Error("An error occurred when deleting the bullet.");
+	}
+}
+
 module.exports = {
 	generateUserModel: ({
 		user
@@ -198,6 +207,7 @@ module.exports = {
 	getCurrentResource,
 	getCurrentBullet,
 	addTags,
+	deleteBullet,
 	INVITATION_TYPES,
 	INVITATION_ACTIONS,
 }

@@ -15,6 +15,7 @@ const {
 	loadUsersByUserIds,
 	getCurrentRoom,
 	addTags,
+	deleteBullet,
 } = require('../../util');
 const {
 	ObjectId
@@ -123,6 +124,11 @@ module.exports = {
 			if (deleteRes.deletedCount !== 1 || !deleteRes.ok) {
 				throw new Error("Resource deletion failed: an error occurred when deleting the bullet.");
 			}
+
+			// Delete all bullets
+			// Alternative way is to toggle the resource hidden field, and decrement the bullet tagging count
+			const bullets = await Bullet.find({ resourceId: resource._id });
+			Promise.all(bullets.map(bullet => deleteBullet(bullet)));
 
 			return resource;
 		},

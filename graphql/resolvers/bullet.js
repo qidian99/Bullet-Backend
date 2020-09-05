@@ -17,6 +17,7 @@ const {
 	getCurrentResource,
 	addTags,
 	getCurrentBullet,
+	deleteBullet,
 } = require('../../util');
 const {
 	ObjectId
@@ -124,16 +125,10 @@ module.exports = {
 			const bullet = await Bullet.findOne({ _id: bulletId, userId: currentUser._id });
 			
 			if (!bullet) {
-				throw new Error("No bullet found. Either you are not the author or the bulletId is invalid.");
+				throw new Error("Bullet deletion failed: no bullet found. Either you are not the author or the bulletId is invalid.");
 			}
 
-			// Decrement all tags
-			await addTags([], bullet.tags);
-
-			const deleteRes = await Bullet.deleteOne({ _id: bullet._id });
-			if (deleteRes.deletedCount !== 1 || !deleteRes.ok) {
-				throw new Error("An error occurred when deleting the bullet.");
-			}
+			await deleteBullet(bullet);
 
 			return bullet;
 		},
