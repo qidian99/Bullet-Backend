@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = mongoose.model('User');
 const Room = mongoose.model('Room');
 const Bullet = mongoose.model('Bullet');
+const Tag = mongoose.model('Tag');
 
 const {
 	getUser,
@@ -17,8 +18,6 @@ const {
 const {
 	ObjectId
 } = require('mongodb');
-const bullet = require('../../models/bullet');
-const room = require('../../models/room');
 
 
 module.exports = {
@@ -29,7 +28,8 @@ module.exports = {
 		},
 		room: (parent) => {
 			return Room.findById(parent.roomId);
-		}
+		},
+		tags: (parent) => Tag.find({ name: parent.tags }),
 	},
 	Mutation: {
 		createBullet: async (parent, {
@@ -45,15 +45,20 @@ module.exports = {
 			const currentUser = await getCurrentUser(user);
 			const currentRoom = await getCurrentRoom(roomId);
 
-			const bullet = await new Bullet({
+			const param = {
 				userId: currentUser._id,
 				roomId: currentRoom._id,
 				source,
 				type,
-				tags: addTags(tags, null),
 				timestamp,
 				content,
-			}).save();
+			}
+
+			if (tags) {
+				param.tags = await addTags(JSON.parse(tags), null)
+			}
+
+			const bullet = await new Bullet(param).save();
 
 			// console.log(bullet);
 			return bullet;
@@ -87,7 +92,7 @@ module.exports = {
 			}
 
 			if (tags) {
-				bullet.tags = addTags(JSON.parse(tags), bullet.tags);
+				bullet.tags = await addTags(JSON.parse(tags), bullet.tags);
 			}
 
 			if (timestamp) {

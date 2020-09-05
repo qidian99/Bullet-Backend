@@ -7,7 +7,7 @@ const typedef = gql`
 		room: Room
 		source: String!
 		type: String
-		tags: JSON
+		tags: [Tag]
     timestamp: Int!
 		content: String!
 		updatedAt: String
