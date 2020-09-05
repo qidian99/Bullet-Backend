@@ -16,6 +16,7 @@ const typedef = gql`
 
 	type BulletAggregateResponse {
 		source: String!
+		updatedAt: String!
 		bullets: [Bullet]
 	}
 
@@ -23,6 +24,7 @@ const typedef = gql`
 		rooms: [Room],
 		allRooms(userId: ID): [Room],
 		room(roomId: ID!): Room
+		bulletTeasersInRoom(roomId: ID! limit: Int): [BulletAggregateResponse]
 		aggregateBulletsInRoom(roomId: ID!): [BulletAggregateResponse]
 	}
 
