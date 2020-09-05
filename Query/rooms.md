@@ -16,7 +16,7 @@ mutation updateRoom {
     alias: "room6" 
     # users:"[\"5f52bc83e3221e1950a55fd6\",\"5f52bc89e3221e1950a55fd7\",\"5f52bc8de3221e1950a55fd8\"]" 
     # admins:"[\"5f52bc83e3221e1950a55fd6\"]" 
-    public: true
+    public: false
   ) {
     ...roomFragment
   }
@@ -24,6 +24,12 @@ mutation updateRoom {
 
 query rooms {
   rooms {
+    ...roomFragment
+  }
+}
+
+query room {
+  room(roomId: "5f52bd529a1f761f8c44eae3") {
     ...roomFragment
   }
 }

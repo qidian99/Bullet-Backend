@@ -3,3 +3,4 @@ require('./room');
 require('./bullet');
 require('./invitation');
 require('./friend');
+require('./tag');

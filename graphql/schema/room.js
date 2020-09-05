@@ -17,7 +17,7 @@ const typedef = gql`
 	extend type Query {
 		rooms: [Room],
 		allRooms(userId: ID): [Room],
-		room(room: ID!): Room
+		room(roomId: ID!): Room
 	}
 
 	extend type Mutation {

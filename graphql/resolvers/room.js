@@ -186,6 +186,16 @@ module.exports = {
 			// console.log(rooms[0].users, typeof rooms[0].users);
 			return rooms;
 		},
+		room: async (parent, { roomId }, { user }) => {
+			const currentUser = await getCurrentUser(user);
+			const currentRoom = await getCurrentRoom(roomId);
+
+			if (currentRoom.public === false && !currentRoom.users.includes(currentUser._id)) {
+				throw new Error("Room retrieval failed: room is private.");
+			}
+
+			return currentRoom;
+		},
 		allRooms: async (parent, {
 			userId
 		}, {
