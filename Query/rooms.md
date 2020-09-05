@@ -1,3 +1,9 @@
+mutation createRoomWithoutInvitation {
+  createRoomWithoutInvitation(alias: "roomNiubi" users:"[\"5f533a1a873c383d503403ad\",\"5f533a24873c383d503403af\"]" admins:"[\"5f533a24873c383d503403af\"]" public:true) {
+    ...roomFragment
+  }
+}
+
 mutation createRoom {
   createRoom(alias: "room1" users:"[\"5f533a1a873c383d503403ad\",\"5f533a24873c383d503403af\"]" admins:"[\"5f533a24873c383d503403af\"]" public:true) {
     ...roomFragment

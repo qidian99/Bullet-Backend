@@ -50,6 +50,70 @@ module.exports = {
 		}
 	},
 	Mutation: {
+		createRoomWithoutInvitation: async (parent, {
+			alias,
+			users: userStr,
+			admins: adminsStr,
+			public,
+			widgets,
+			avatar,
+			// For adding user by username/id, DON't change it!
+			loader = 'id'
+		}, {
+			user
+		}) => {
+			const currentUser = await getCurrentUser(user);
+
+			const loaderFn = loader === 'id' ? loadUsersByUserIds : loadUsersByUsernames;
+			const usersJSON = JSON.parse(userStr);
+			const users = await loaderFn(usersJSON);
+			const adminsJSON = JSON.parse(adminsStr);
+			const admins = await loaderFn(adminsJSON)
+
+			const pendingList = users.filter((user) => {
+				// console.log(user._id.toString(), currentUser._id.toString(), user._id.toString() !== currentUser._id.toString())
+				return user._id.toString() !== currentUser._id.toString()
+			}).map(user => user._id);
+
+			// Check that all admins is included in user list
+			let adminIncludesCurrentUser = false;
+			adminsJSON.forEach(adminId => {
+				if (!usersJSON.includes(adminId)) {
+					throw new Error("Room creation failed: all admins must be in user list.");
+				}
+				if (adminId === currentUser._id.toString) {
+					adminIncludesCurrentUser = true;
+				}
+			})
+			if (!adminIncludesCurrentUser) {
+				admins.push(currentUser);
+			}
+
+			const newRoom = {
+				alias,
+				users: [...(pendingList.map(u => u._id)), currentUser._id],
+				admins: admins.map(admin => admin._id),
+				pending: [],
+				public,
+				avatar,
+				creator: currentUser._id,
+			}
+
+			if (widgets) {
+				newRoom.widgets = JSON.parse(widgets);
+			}
+
+			const room = await new Room(newRoom).save();
+
+
+			await Promise.all(pendingList.map((pendingUser) => new RoomInvitation({
+				roomId: room._id,
+				userId: pendingUser._id,
+				accepted: 1,
+			}).save()));
+
+			return room;
+		},
 		createRoom: async (parent, {
 			alias,
 			users: userStr,

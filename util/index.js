@@ -109,7 +109,7 @@ const changeInvitationStatus = (invitation, mode = 'accept') => {
 
 const addTags = async (newTags, oldTags) => {
 
-	console.log(newTags, oldTags)
+	// console.log(newTags, oldTags)
 
 	// deletion process
 	if (oldTags && oldTags.length !== 0) {

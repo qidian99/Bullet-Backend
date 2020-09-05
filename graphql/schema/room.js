@@ -30,6 +30,7 @@ const typedef = gql`
 
 	extend type Mutation {
 		createRoom(alias: String! users: JSON! admins: JSON! public: Boolean avatar: String widgets: JSON ): Room!
+		createRoomWithoutInvitation(alias: String! users: JSON! admins: JSON! public: Boolean avatar: String widgets: JSON ): Room!
 		updateRoom(roomId: ID! alias: String admins: JSON users: JSON public: Boolean avatar: String widgets: JSON): Room
 		deleteRoom(roomId: ID!): Room
 	}
