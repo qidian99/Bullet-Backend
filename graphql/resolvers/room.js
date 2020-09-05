@@ -65,6 +65,10 @@ module.exports = {
 				return user._id.toString() !== currentUser._id.toString()
 			}).map(user => user._id);
 
+			if (!adminsStr.includes(currentUser._id.toString())) {
+				admins.push(currentUser);
+			}
+
 			const room = await new Room({
 				alias,
 				users: [currentUser._id],
