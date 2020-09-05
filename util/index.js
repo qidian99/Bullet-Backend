@@ -2,11 +2,12 @@ const mongoose = require('mongoose');
 
 const User = mongoose.model('User');
 const Room = mongoose.model('Room');
+const Tag = mongoose.model('Tag');
 
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
 
-const { INVITATION_TYPES, INVITATION_ACTIONS } = require('./types')
+const { INVITATION_TYPES, INVITATION_ACTIONS } = require('./types');
 
 const getUser = token => {
 	try {
@@ -106,16 +107,49 @@ const changeInvitationStatus = (invitation, mode = 'accept') => {
 	}
 }
 
-const addTags = (newTags, oldTags) => {
+const addTags = async (newTags, oldTags) => {
+
+	console.log(newTags, oldTags)
 
 	// deletion process
-	if (oldTags && oldTags.length === 0) {
-		
+	if (oldTags && oldTags.length !== 0) {
+		await Tag.updateMany({
+			name: {
+				$in: oldTags,
+			}
+		}, {
+			$inc: {
+				count: -1
+			}
+		});
 	}
 
 	// creation process
-	tags = [];
-	return tags;
+	const existingTags = await Tag.find({ name: { $in: newTags } });
+	// console.log('existingTags', existingTags)
+
+	await Tag.updateMany({
+		name: {
+			$in: existingTags.map(tag => tag.name),
+		}
+	}, {
+		$inc: {
+			count: 1
+		}
+	});
+
+	// Filter out non-existing tags
+	const nonexistingTags = await newTags.filter(tag => !existingTags.map(tag => tag.name).includes(tag));
+	// console.log('nonexistingTags', nonexistingTags)
+
+
+	const insertedTags = nonexistingTags.map(tag => ({ name: tag, count: 1 }));
+
+	const insertedRes = await Tag.insertMany(insertedTags)
+
+	// console.log(insertedRes);
+
+	return newTags;
 }
 
 module.exports = {

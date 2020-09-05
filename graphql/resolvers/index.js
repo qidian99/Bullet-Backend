@@ -3,6 +3,7 @@ const roomResolver = require('./room');
 const bulletResolver = require('./bullet');
 const roomInvitationResolver = require('./invitation');
 const friendInvitationResolver = require('./friend');
+const tagResolver = require('./tag');
 const { GraphQLJSON, GraphQLJSONObject } = require('graphql-type-json');
 
 const jsonResolvers = {
@@ -17,4 +18,5 @@ module.exports = [
 	bulletResolver,
 	roomInvitationResolver,
 	friendInvitationResolver,
+	tagResolver,
 ]
