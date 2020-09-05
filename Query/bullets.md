@@ -4,6 +4,13 @@ mutation createBullet {
   }
 }
 
+mutation deleteBullet {
+  deleteBullet(bulletId: "5f52c4b95ea2eb174c242881") {
+    ...bulletFragment
+  }
+}
+
+
 
 query bullets {
   bullets {
@@ -19,22 +26,26 @@ query allBulletsInRoom {
 }
 
 query bulletsByUser {
-  bulletsByUser(userId: "5f52afa73eb6fa08fcd3692a") {
+  bulletsByUser(userId: "5f52bc8de3221e1950a55fd8" roomId: "5f52bd529a1f761f8c44eae3") {
     ...bulletFragment
   }
 }
 
+
+
 fragment bulletFragment on Bullet {
   bulletId
-    user {
-      userId
-      username
-    }
-    room {
-      roomId
-      alias
-		}
-  	source
-    timestamp
-    content
+  user {
+    userId
+    username
+  }
+  room {
+    roomId
+    alias
+  }
+  source
+  timestamp
+  content
+  updatedAt
+	createdAt
 }

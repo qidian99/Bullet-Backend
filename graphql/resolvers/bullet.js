@@ -57,6 +57,25 @@ module.exports = {
 			// console.log(bullet);
 			return bullet;
 		},
+		deleteBullet: async (parent, {
+			bulletId
+		}, {
+			user
+		}) => {
+			const currentUser = await getCurrentUser(user);
+			const bullet = await Bullet.findOne({ _id: bulletId, userId: currentUser._id });
+			
+			if (!bullet) {
+				throw new Error("No bullet found. Either you are not the author or the bulletId is invalid.");
+			}
+
+			const deleteRes = await Bullet.deleteOne({ _id: bullet._id });
+			if (deleteRes.deletedCount !== 1 || !deleteRes.ok) {
+				throw new Error("An error occurred when deleting the bullet.");
+			}
+
+			return bullet;
+		},
 	},
 	Query: {
 		bullets: async (parent) => {
@@ -64,7 +83,8 @@ module.exports = {
 		},
 		bulletsByUser: async (parent, {
 			userId,
-			roomId
+			roomId,
+			type
 		}, {
 			user
 		}) => {
@@ -74,6 +94,10 @@ module.exports = {
 			}
 			if (roomId) {
 				query.roomId = roomId;
+			}
+
+			if (type) {
+				query.type = type;
 			}
 			const bullets = await Bullet.find(query);
 			return bullets;

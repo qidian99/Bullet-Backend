@@ -18,6 +18,7 @@ const typedef = gql`
 		createFriendInvitation(to: ID!): FriendInvitation!
 		acceptFriendInvitation(invitationId: ID!): FriendInvitation!
 		declineFriendInvitation(invitationId: ID!): FriendInvitation!
+		deleteFriend(userId: ID!): User
 	}
 `
 

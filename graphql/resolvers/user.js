@@ -25,7 +25,7 @@ module.exports = {
 	User: {
 		userId: async (parent) => parent._id,
 		friends: async (parent) => {
-			console.log('parent.friends', parent.friends)
+			// console.log('parent.friends', parent.friends)
 			return User.find({
 				_id: {
 					$in: parent.friends,

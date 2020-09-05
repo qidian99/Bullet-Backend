@@ -6,7 +6,8 @@ const typedef = gql`
 		alias: String!
     users: [User]!
     admins: [User]!
-    pending: [User]!
+		pending: [User]!
+		creator: User!
     public: Boolean
 		widgets: [String]
 		avatar: String
@@ -20,7 +21,9 @@ const typedef = gql`
 	}
 
 	extend type Mutation {
-		createRoom(alias: String! users: JSON! admins: JSON! public: Boolean ): Room!
+		createRoom(alias: String! users: JSON! admins: JSON! public: Boolean avatar: String widgets: JSON ): Room!
+		updateRoom(roomId: ID! alias: String admins: JSON users: JSON public: Boolean avatar: String widgets: JSON): Room
+		deleteRoom(roomId: ID!): Room
 	}
 `
 

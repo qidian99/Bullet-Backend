@@ -1,3 +1,10 @@
+mutation deleteFriend {
+  deleteFriend(userId: "5f52bc8de3221e1950a55fd8") {
+    userId
+    username
+  }
+}
+
 mutation createFriendInvitation {
   createFriendInvitation(to: "5f52bc83e3221e1950a55fd6") {
     ...friendInvitationFragment
@@ -6,7 +13,7 @@ mutation createFriendInvitation {
 
 
 mutation acceptFriendInvitation {
-  acceptFriendInvitation(invitationId: "5f52e1c7f3206f0c4cade199") {
+  acceptFriendInvitation(invitationId: "5f52fb655db3da5e58cab0ea") {
 		...friendInvitationFragment
   }
 }
