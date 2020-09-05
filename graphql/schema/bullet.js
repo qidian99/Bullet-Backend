@@ -16,8 +16,9 @@ const typedef = gql`
 
 	extend type Query {
 		bullets: [Bullet],
-		bulletsByUser(roomId: ID type: String userId: ID!): [Bullet]
+		bulletsByUser(roomId: ID source: String type: String userId: ID!): [Bullet]
 		allBulletsInRoom(roomId: ID!): [Bullet]
+		allBulletsInVideo(roomId: ID! source: String!): [Bullet]
 	}
 
 	extend type Mutation {

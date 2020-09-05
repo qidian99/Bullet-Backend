@@ -109,13 +109,21 @@ module.exports = {
 	},
 	Query: {
 		invitations: async (parent) => {
-			return await RoomInvitation.find({});
+			return await RoomInvitation.find({}, null, {
+				sort: {
+					updatedAt: -1
+				}
+			});
 		},
 		roomInvitations: async (parent, _, { user }) => {
 			const currentUser = await getCurrentUser(user);
 
 			const invitations = await RoomInvitation.find({ 
 				userId: currentUser._id,
+			}, null, {
+				sort: {
+					updatedAt: -1
+				}
 			})
 			return invitations;
 		}

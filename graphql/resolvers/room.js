@@ -192,7 +192,11 @@ module.exports = {
 	},
 	Query: {
 		rooms: async (parent) => {
-			const rooms = await Room.find({});
+			const rooms = await Room.find({}, null, {
+				sort: {
+					updatedAt: -1
+				}
+			});
 			// console.log(rooms[0].users, typeof rooms[0].users);
 			return rooms;
 		},
@@ -229,7 +233,11 @@ module.exports = {
 				}
 			}
 
-			return Room.find(query)
+			return Room.find(query, null, {
+				sort: {
+					updatedAt: -1
+				}
+			})
 		},
 		aggregateBulletsInRoom: async (parent, {
 			roomId
