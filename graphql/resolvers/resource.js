@@ -27,8 +27,8 @@ module.exports = {
 		room: (parent) => {
 			return Room.findById(parent.roomId);
 		},
-		creator: (parent) => {
-			return User.findById(parent.creator);
+		user: (parent) => {
+			return User.findById(parent.userId);
 		},
 		tags: (parent) => Tag.find({ name: parent.tags }),
 	},
@@ -47,7 +47,7 @@ module.exports = {
 
 			const param = {
 				roomId: currentRoom._id,
-				creator: currentUser._id,
+				userId: currentUser._id,
 				name,
 				url,	
 				description,
@@ -77,7 +77,7 @@ module.exports = {
 			}
 
 			// TODO: add admin priviledges to update resource
-			if (resource.creator.toString() !== currentUser._id.toString()) {
+			if (resource.userId.toString() !== currentUser._id.toString()) {
 				throw new Error("Resource update failed: you are not the resource creator.")
 			}
 
@@ -110,7 +110,7 @@ module.exports = {
 			const currentUser = await getCurrentUser(user);
 
 			// TODO: add admin priviledges to update resource
-			const resource = await Resource.findOne({ _id: resourceId, creator: currentUser._id });
+			const resource = await Resource.findOne({ _id: resourceId, userId: currentUser._id });
 			
 			// Decrement all tags
 			await addTags([], resource.tags);
@@ -149,7 +149,7 @@ module.exports = {
 			}
 
 			if (userId) {
-				query.creator = userId;
+				query.userId = userId;
 			}
 
 			if (roomId) {

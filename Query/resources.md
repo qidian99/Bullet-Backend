@@ -1,10 +1,10 @@
 mutation createResource {
   createResource(
     roomId: "5f53b3e4d008084e94c1442c"
-    name: "New Resource"
+    name: "LaLa"
     description: "This is the video source in Room Niubi" 
-    url: "http://haha.ha.com"
-    tags: "[\"Bilibili\",\"Aiqiyi\"]"
+    url: "http://ssss.ha.com"
+    tags: "[\"Bilibili\"]"
   ) {
     ...resourceFragment
   }
@@ -18,7 +18,7 @@ mutation deleteResource {
 
 mutation updateResource {
   updateResource(
-    resourceId: "5f53bb757e8a045230936b09"
+    resourceId: "5f53cc692f8f6619803bfd94"
     description: "new content"
     tags: "[\"c\",\"d\",\"e\"]"
   ) {
@@ -65,7 +65,7 @@ fragment resourceFragment on Resource {
     name
     count
   }
-  creator {
+  user {
     userId
     username
   }

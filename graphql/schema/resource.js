@@ -8,7 +8,7 @@ const typedef = gql`
 		url: String
 		description: String
 		tags: [Tag]
-		creator: User!
+		user: User!
 		updatedAt: String
 		createdAt: String
 		hidden: Boolean

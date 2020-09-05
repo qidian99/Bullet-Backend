@@ -135,7 +135,7 @@ fragment resourceFragment on Resource {
     name
     count
   }
-  creator {
+  user {
     userId
     username
   }

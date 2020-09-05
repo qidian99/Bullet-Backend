@@ -16,6 +16,7 @@ const {
 	getCurrentRoom,
 	getCurrentResource,
 	addTags,
+	getCurrentBullet,
 } = require('../../util');
 const {
 	ObjectId
@@ -28,8 +29,8 @@ module.exports = {
 		user: (parent) => {
 			return User.findById(parent.userId);
 		},
-		type: (parent) => {
-			return Resource.findById(parent.type);
+		resource: (parent) => {
+			return Resource.findById(parent.resourceId);
 		},
 		room: (parent) => {
 			return Room.findById(parent.roomId);
@@ -42,26 +43,29 @@ module.exports = {
 			timestamp,
 			content,
 			source,
-			type,
+			resourceId,
 			tags,
 		}, {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
 			const currentRoom = await getCurrentRoom(roomId);
-			const currentResource = await getCurrentResource(type);
+			const currentResource = await getCurrentResource(resourceId);
 
 			const param = {
 				userId: currentUser._id,
 				roomId: currentRoom._id,
 				source,
-				type: currentResource._id,
+				resourceId: currentResource._id,
 				timestamp,
 				content,
 			}
 
 			if (tags) {
 				param.tags = await addTags(JSON.parse(tags), null)
+			} else {
+				// Use resource tags instead
+				param.tags = await addTags(currentResource.tags, null)
 			}
 
 			const bullet = await new Bullet(param).save();
@@ -72,14 +76,14 @@ module.exports = {
 		updateBullet: async (parent, {
 			bulletId,
 			content,
-			type,
+			resourceId,
 			tags,
 			timestamp
 		}, {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
-			const bullet = await Bullet.findById(bulletId);
+			const bullet = await getCurrentBullet(bulletId);
 
 			if (!bullet) {
 				throw new Error("Bullet update failed: bullet does not exist.")
@@ -93,9 +97,9 @@ module.exports = {
 				bullet.content = content;
 			}
 
-			if (type) {
-				const currentResource = await getCurrentResource(type);
-				bullet.type = currentResource._id;
+			if (resourceId) {
+				const currentResource = await getCurrentResource(resourceId);
+				bullet.resourceId = currentResource._id;
 			}
 
 			if (tags) {
@@ -146,7 +150,7 @@ module.exports = {
 			userId,
 			roomId,
 			source,
-			type
+			resourceId
 		}, {
 			user
 		}) => {
@@ -162,8 +166,8 @@ module.exports = {
 				query.source = source;
 			}
 
-			if (type) {
-				query.type = type;
+			if (resourceId) {
+				query.resourceId = resourceId;
 			}
 			const bullets = await Bullet.find(query, null, {
 				sort: {
@@ -192,17 +196,17 @@ module.exports = {
 		},
 		allBulletsInResource: async (parent, {
 			roomId,
-			type
+			resourceId
 		}, {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
-			const currentResource = await getCurrentResource(type);
+			const currentResource = await getCurrentResource(resourceId);
 			const currentRoom = await getCurrentRoom(roomId);
 
 			const bullets = await Bullet.find({
 				roomId: currentRoom._id,
-				type: currentResource._id
+				resourceId: currentResource._id
 			}, null, {
 				sort: {
 					updatedAt: -1

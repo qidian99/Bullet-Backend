@@ -6,7 +6,7 @@ const typedef = gql`
 		user: User!
 		room: Room
 		source: String!
-		type: Resource!
+		resource: Resource!
 		tags: [Tag]
     timestamp: Int!
 		content: String!
@@ -16,14 +16,14 @@ const typedef = gql`
 
 	extend type Query {
 		bullets: [Bullet],
-		bulletsByUser(roomId: ID source: String type: String userId: ID!): [Bullet]
+		bulletsByUser(roomId: ID source: String resourceId: String userId: ID!): [Bullet]
 		allBulletsInRoom(roomId: ID!): [Bullet]
-		allBulletsInResource(roomId: ID! type: ID!): [Bullet]
+		allBulletsInResource(roomId: ID! resourceId: ID!): [Bullet]
 	}
 
 	extend type Mutation {
-		createBullet(roomId: ID! type: ID! source: String! timestamp: Int! content: String!): Bullet!
-		updateBullet(bulletId: ID! content: String type: ID tags: JSON timestamp: Int): Bullet
+		createBullet(roomId: ID! resourceId: ID! source: String! timestamp: Int! content: String!): Bullet!
+		updateBullet(bulletId: ID! content: String resourceId: ID tags: JSON timestamp: Int): Bullet
 		deleteBullet(bulletId: ID!): Bullet
 	}
 `

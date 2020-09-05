@@ -4,6 +4,7 @@ const User = mongoose.model('User');
 const Room = mongoose.model('Room');
 const Tag = mongoose.model('Tag');
 const Resource = mongoose.model('Resource');
+const Bullet = mongoose.model('Bullet');
 
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
@@ -63,6 +64,22 @@ const getCurrentResource = async (resourceId) => {
 	}
 	return resource;
 };
+
+
+const getCurrentBullet = async (bulletId) => {
+	const ERR_STR = "Bullet retrieval failed: bullet does not exist";
+
+	if (!bulletId) {
+		throw new Error(ERR_STR);
+	}
+	const bullet = await Bullet.findById(bulletId);
+
+	if (!bullet) {
+		throw new Error(ERR_STR);
+	}
+	return bullet;
+};
+
 
 const loadUsersByUsernames = async (usernames) => {
 	const users = await User.find({
@@ -179,6 +196,7 @@ module.exports = {
 	changeInvitationStatus,
 	getCurrentRoom,
 	getCurrentResource,
+	getCurrentBullet,
 	addTags,
 	INVITATION_TYPES,
 	INVITATION_ACTIONS,

@@ -418,7 +418,7 @@ module.exports = {
 					$group: {
 						_id: {
 							// source: "$source"
-							resource: "$type"
+							resource: "$resourceId"
 						},
 						updatedAt: {
 							$max: "$updatedAt"
@@ -443,13 +443,13 @@ module.exports = {
 				const bullets = await Bullet.aggregate([{
 						$match: {
 							roomId: ObjectId(roomId),
-							type: agg.resource,
+							resourceId: agg.resource,
 						}
 					},
 					// {
 					// 	$lookup: {
 					// 		from: "resources",
-					// 		localField: "type",
+					// 		localField: "resourceId",
 					// 		foreignField: "_id",
 					// 		as: "resource"
 					// 	}

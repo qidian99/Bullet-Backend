@@ -3,25 +3,25 @@ mutation createBullet {
     roomId: "5f533cf50ee8ec34c0d0d2b5" 
     source: "Bilibili" 
     timestamp: 12324535 
-    content: "bilibili 5"
-    type: "5f53bc29f3f8511cfc221ba9"
+    content: "BN3"
+    resourceId: "5f53ceb533f70d0d08d71891"
   ) {
     ...bulletFragment
   }
 }
 
 mutation deleteBullet {
-  deleteBullet(bulletId: "5f53beada657425e182fd435") {
+  deleteBullet(bulletId: "5f53cd65bc1d3019cc1c86de") {
     ...bulletFragment
   }
 }
 
 mutation updateBullet {
   updateBullet(
-    bulletId: "5f53beada657425e182fd435"
+    bulletId: "5f53cd65bc1d3019cc1c86de"
     content: "new content"
     tags: "[\"c\",\"d\",\"e\"]"
-    type: "5f53bc29f3f8511cfc221ba1"
+    resourceId: "5f53cc692f8f6619803bfd94"
   ) {
     ...bulletFragment
   }
@@ -43,7 +43,7 @@ query allBulletsInRoom {
 
 
 query allBulletsInResource {
-  allBulletsInResource(roomId: "5f533cf50ee8ec34c0d0d2b5" type: "5f53bc29f3f8511cfc221ba9") {
+  allBulletsInResource(roomId: "5f533cf50ee8ec34c0d0d2b5" resourceId: "5f53cc692f8f6619803bfd94") {
       ...bulletFragment
   }
 }
@@ -72,14 +72,14 @@ fragment bulletFragment on Bullet {
     roomId
     alias
   }
-  type {
+  resource {
     resourceId
     tags {
       name
       count
     }
     description
-    creator {
+    user {
       username
     }
   }

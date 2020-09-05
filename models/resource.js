@@ -8,7 +8,7 @@ const ResourceSchema = new Schema({
   url: { type: String, required: false },
   files: { type: Array, required: false },
   roomId: { type: Schema.Types.ObjectId, ref: 'Room', required: false }, // False for testing purposes
-  creator: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   hidden: { type: Boolean, require: false },
 }, {
   timestamps: true,

@@ -6,7 +6,7 @@ const BulletSchema = new Schema({
   roomId: { type: Schema.Types.ObjectId, ref: 'Room', required: false }, // False for testing purposes
   source: { type: String, required: true },
   tags: { type: Array, required: false },
-  type: { type: Schema.Types.ObjectId, ref: 'Resource', required: true  },
+  resourceId: { type: Schema.Types.ObjectId, ref: 'Resource', required: true  },
   timestamp: { type: Number, required: true },
   content: { type: String, required: true },
 }, {
