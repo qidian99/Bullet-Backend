@@ -319,81 +319,11 @@ module.exports = {
 					users: ObjectId(currentUser._id)
 				}
 			}
-
 			return Room.find(query, null, {
 				sort: {
 					updatedAt: -1
 				}
 			})
-		},
-		aggregateBulletsInRoom: async (parent, {
-			roomId
-		}, {
-			user
-		}) => {
-			const currentUser = await getCurrentUser(user);
-			const currentRoom = await getCurrentRoom(roomId);
-
-			if (currentRoom.public === false && !currentRoom.users.includes(currentUser._id)) {
-				throw new Error("Room retrieval failed: room is private.");
-			}
-
-			// Aggregate bullets by source
-
-			const aggregate = await Bullet.aggregate([{
-					$match: {
-						roomId: ObjectId(roomId),
-					}
-				},
-				// {
-				// 	$lookup: {
-				// 		from: "rooms",
-				// 		localField: "roomId",
-				// 		foreignField: "_id",
-				// 		as: "rooms"
-				// 	}
-				// },
-				// {
-				// 	"$unwind": "$rooms"
-				// },
-				{
-					$group: {
-						_id: {
-							source: "$source"
-						},
-						updatedAt: {
-							$max: "$updatedAt"
-						},
-						bullets: {
-							$push: {
-								_id: "$_id",
-								tags: "$tags",
-								userId: "$userId",
-								timestamp: "$timestamp",
-								content: "$content",
-								createdAt: "$createdAt:",
-								updatedAt: "$updatedAt",
-							}
-						},
-					}
-				},
-				{
-					$project: {
-						source: "$_id.source",
-						updatedAt: "$updatedAt",
-						bullets: "$bullets",
-					}
-				},
-				{
-					$sort: {
-						updatedAt: -1
-					}
-				},
-			])
-
-			// console.log(aggregate);
-
-			return aggregate;
 		},
 		resourceTeasersInRoom: async (parent, {
 			roomId,
@@ -439,6 +369,7 @@ module.exports = {
 			])
 
 			const result = [];
+			const nonEmptyResourceIds = [];
 			await Promise.all(aggregate.map(async (agg) => {
 				const bullets = await Bullet.aggregate([{
 						$match: {
@@ -470,7 +401,21 @@ module.exports = {
 					bullets,
 					updatedAt: agg.updatedAt,
 				})
+				nonEmptyResourceIds.push(resource._id.toString());
 			}))
+
+			const resources = await Resource.find({ roomId });
+
+			// console.log(resources);
+			resources.forEach(resource => {
+				if (!nonEmptyResourceIds.includes(resource._id.toString())) {
+					result.push({
+						resource,
+						bullets: [],
+						updatedAt: resource.updatedAt,
+					})
+				}
+			})
 
 			// console.log(result);
 

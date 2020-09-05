@@ -18,10 +18,10 @@ mutation deleteRoom {
 
 mutation updateRoom {
   updateRoom(
-    roomId: "5f52bd529a1f761f8c44eae3" 
-    alias: "room6" 
-    # users:"[\"5f52bc83e3221e1950a55fd6\",\"5f52bc89e3221e1950a55fd7\",\"5f52bc8de3221e1950a55fd8\"]" 
-    # admins:"[\"5f52bc83e3221e1950a55fd6\"]" 
+    roomId: "5f52bd529a1f761f8c44eae3"
+    alias: "room6"
+    # users:"[\"5f52bc83e3221e1950a55fd6\",\"5f52bc89e3221e1950a55fd7\",\"5f52bc8de3221e1950a55fd8\"]"
+    # admins:"[\"5f52bc83e3221e1950a55fd6\"]"
     public: false
   ) {
     ...roomFragment
@@ -75,21 +75,8 @@ query allRooms {
   }
 }
 
-
-query aggregateBulletsInRoom {
-  aggregateBulletsInRoom(roomId: "5f533cf50ee8ec34c0d0d2b5") {
-  	resource {
-      ...resourceFragment
-    }
-    bullets {
-      ...bulletFragment
-    }
-    updatedAt
-  }
-}
-
 query resourceTeasersInRoom {
-  resourceTeasersInRoom(roomId: "5f533cf50ee8ec34c0d0d2b5") {
+  resourceTeasersInRoom(roomId: "5f53b3e4d008084e94c1442c") {
   	resource {
       ...resourceFragment
     }

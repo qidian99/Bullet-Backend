@@ -9,7 +9,12 @@
     "refresh": "git pull && forever stop index.js && npm run deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["node", "graphql", "apollo", "mongodb"],
+  "keywords": [
+    "node",
+    "graphql",
+    "apollo",
+    "mongodb"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {

@@ -1,8 +1,9 @@
 mutation createBullet {
   createBullet(
-    roomId: "5f533cf50ee8ec34c0d0d2b5" 
-    source: "Bilibili" 
-    timestamp: 12324535 
+    roomId: "5f533cf50ee8ec34c0d0d2b5"
+    resourceId: "5f53dd655ee29c724966417b"
+    source: "Bilibili"
+    timestamp: 12324535
     content: "BN3"
     resourceId: "5f53ceb533f70d0d08d71891"
   ) {
@@ -51,7 +52,7 @@ query allBulletsInResource {
 
 query bulletsByUser {
   bulletsByUser(
-    userId: "5f52bc8de3221e1950a55fd8" 
+    userId: "5f52bc8de3221e1950a55fd8"
     roomId: "5f52bd529a1f761f8c44eae3"
     source: "Bilibili"
   ) {
