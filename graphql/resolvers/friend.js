@@ -59,6 +59,8 @@ module.exports = {
 			}
 			fromUser.friends.push(currentUser._id);
 			fromUser.save();
+			currentUser.friends.push(fromUser._id);
+			currentUser.save();
 			invitation.save();
 			return invitation;
 		},
