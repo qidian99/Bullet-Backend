@@ -14,10 +14,16 @@ const typedef = gql`
 		updatedAt: String
 	}
 
+	type BulletAggregateResponse {
+		source: String!
+		bullets: [Bullet]
+	}
+
 	extend type Query {
 		rooms: [Room],
 		allRooms(userId: ID): [Room],
 		room(roomId: ID!): Room
+		aggregateBulletsInRoom(roomId: ID!): [BulletAggregateResponse]
 	}
 
 	extend type Mutation {

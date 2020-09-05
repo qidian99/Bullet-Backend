@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const User = mongoose.model('User');
 const Room = mongoose.model('Room');
+const Bullet = mongoose.model('Bullet');
 const RoomInvitation = mongoose.model('RoomInvitation');
 const {
 	getUser,
@@ -17,6 +18,7 @@ const {
 const {
 	ObjectId
 } = require('mongodb');
+const room = require('../../models/room');
 
 
 module.exports = {
@@ -124,10 +126,12 @@ module.exports = {
 				currentRoom.alias = alias;
 			}
 
-			if (userStr) {			
+			if (userStr) {
 				const users = await loaderFn(JSON.parse(userStr));
 				const pendingList = users.filter((user) => {
-					return currentRoom.map(({ _id }) => _id.toString()).includes(user._id.toString());
+					return currentRoom.map(({
+						_id
+					}) => _id.toString()).includes(user._id.toString());
 				}).map(user => user._id);
 				await Promise.all(pendingList.map((pendingUser) => {
 					// console.log('pendingUser', pendingUser);
@@ -154,7 +158,7 @@ module.exports = {
 			if (widgets) {
 				currentRoom.widgets = JSON.parse(widgets);
 			}
-			
+
 			if (avatar) {
 				currentRoom.avatar = avatar;
 			}
@@ -163,7 +167,11 @@ module.exports = {
 
 			return currentRoom;
 		},
-		deleteRoom: async (parent, { roomId }, { user }) => {
+		deleteRoom: async (parent, {
+			roomId
+		}, {
+			user
+		}) => {
 			const currentUser = await getCurrentUser(user)
 			const currentRoom = await getCurrentRoom(roomId)
 
@@ -171,14 +179,16 @@ module.exports = {
 				throw new Error("Room deletion failed: only the creator of the room can delete it.");
 			}
 
-			const deleteRes = await Room.deleteOne({ _id: currentRoom._id });
+			const deleteRes = await Room.deleteOne({
+				_id: currentRoom._id
+			});
 
 			if (!deleteRes.ok || deleteRes.deletedCount !== 1) {
 				throw new Error("Room deletion fail: some error ocurred during deletion process");
 			}
 
 			return currentRoom;
-		} 
+		}
 	},
 	Query: {
 		rooms: async (parent) => {
@@ -186,7 +196,11 @@ module.exports = {
 			// console.log(rooms[0].users, typeof rooms[0].users);
 			return rooms;
 		},
-		room: async (parent, { roomId }, { user }) => {
+		room: async (parent, {
+			roomId
+		}, {
+			user
+		}) => {
 			const currentUser = await getCurrentUser(user);
 			const currentRoom = await getCurrentRoom(roomId);
 
@@ -216,6 +230,65 @@ module.exports = {
 			}
 
 			return Room.find(query)
+		},
+		aggregateBulletsInRoom: async (parent, {
+			roomId
+		}, {
+			user
+		}) => {
+			const currentUser = await getCurrentUser(user);
+			const currentRoom = await getCurrentRoom(roomId);
+
+			if (currentRoom.public === false && !currentRoom.users.includes(currentUser._id)) {
+				throw new Error("Room retrieval failed: room is private.");
+			}
+
+			// Aggregate bullets by source
+
+			const aggregate = await Bullet.aggregate([
+				{
+					$match: {
+						roomId: ObjectId(roomId),
+					}
+				},
+				// {
+				// 	$lookup: {
+				// 		from: "rooms",
+				// 		localField: "roomId",
+				// 		foreignField: "_id",
+				// 		as: "rooms"
+				// 	}
+				// },
+				// {
+				// 	"$unwind": "$rooms"
+				// },
+				{
+					$group: {
+						_id: { source: "$source" },
+						bullets: {
+							$push: {
+								_id: "$_id",
+								tags: "$tags",
+								userId: "$userId",
+								timestamp: "$timestamp",
+								content: "$content",
+								createdAt: "$createdAt:",
+								updatedAt: "$updatedAt",
+							}
+						},
+					}
+				},
+				{
+					$project: {
+						source: "$_id.source",
+						bullets: "$bullets",
+					}
+				}
+			])
+
+			console.log(aggregate);
+
+			return aggregate;
 		}
 	}
 }

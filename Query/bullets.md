@@ -1,5 +1,10 @@
 mutation createBullet {
-  createBullet(roomId: "5f52bd529a1f761f8c44eae3" source: "Bilibili" timestamp: 12324532 content: "my bullet 4") {
+  createBullet(
+    roomId: "5f52bd529a1f761f8c44eae3" 
+    source: "Bilibili" 
+    timestamp: 12324535 
+    content: "hahahaha"
+  ) {
     ...bulletFragment
   }
 }
@@ -12,8 +17,9 @@ mutation deleteBullet {
 
 mutation updateBullet {
   updateBullet(
-    bulletId: "5f52c7a3e56fc620088d6dfb"
+    bulletId: "5f53144d8b093d4b6c72babd"
     content: "new content"
+    tags: "[\"c\",\"d\",\"e\"]"
   ) {
     ...bulletFragment
   }
@@ -40,7 +46,6 @@ query bulletsByUser {
 }
 
 
-
 fragment bulletFragment on Bullet {
   bulletId
   user {
@@ -56,4 +61,8 @@ fragment bulletFragment on Bullet {
   content
   updatedAt
 	createdAt
+  tags {
+    name
+    count
+  }
 }

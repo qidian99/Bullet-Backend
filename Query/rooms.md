@@ -68,3 +68,33 @@ query allRooms {
     ...roomFragment
   }
 }
+
+
+query aggregateBulletsInRoom {
+  aggregateBulletsInRoom(roomId: "5f52bd529a1f761f8c44eae3") {
+  	source
+    bullets {
+      ...bulletFragment
+    }
+  }
+}
+
+fragment bulletFragment on Bullet {
+  bulletId
+  user {
+    userId
+    username
+  }
+  room {
+    roomId
+    alias
+  }
+  timestamp
+  content
+  updatedAt
+	createdAt
+  tags {
+    name
+    count
+  }
+}
