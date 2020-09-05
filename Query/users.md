@@ -13,9 +13,7 @@ query User {
 
 query currentUser {
   currentUser {
-    userId
-    password
-    username
+    ...userSmallFragment
   }
 }
 
@@ -75,6 +73,17 @@ mutation createUserWithProfile {
   }
 }
 
+mutation updateUser {
+  updateUser(
+     email: "qidian@ss.om" 
+    firstname: "Dian" 
+    lastname: "Qi"
+    avatar: "ahah"
+  ) {
+    ...userFragment
+  }
+}
+
 query findUser {
 	findUser(username: "peer") {
     ...userSearchFragment
@@ -115,4 +124,11 @@ fragment userFragment on User {
     email
     username
   }
+}
+
+fragment userSmallFragment on User {
+  userId
+  password
+  username
+  email
 }
