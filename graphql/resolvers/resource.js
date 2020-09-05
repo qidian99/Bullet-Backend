@@ -31,7 +31,9 @@ module.exports = {
 		user: (parent) => {
 			return User.findById(parent.userId);
 		},
-		tags: (parent) => Tag.find({ name: parent.tags }),
+		tags: (parent) => Tag.find({
+			name: parent.tags
+		}),
 	},
 	Mutation: {
 		createResource: async (parent, {
@@ -50,7 +52,7 @@ module.exports = {
 				roomId: currentRoom._id,
 				userId: currentUser._id,
 				name,
-				url,	
+				url,
 				description,
 			}
 
@@ -85,11 +87,11 @@ module.exports = {
 			if (name) {
 				resource.name = name;
 			}
-			
+
 			if (description) {
 				resource.description = description;
 			}
-			
+
 			if (url) {
 				resource.url = url;
 			}
@@ -102,7 +104,7 @@ module.exports = {
 
 			return resource;
 
-		},	
+		},
 		deleteResource: async (parent, {
 			resourceId
 		}, {
@@ -111,8 +113,11 @@ module.exports = {
 			const currentUser = await getCurrentUser(user);
 
 			// TODO: add admin priviledges to update resource
-			const resource = await Resource.findOne({ _id: resourceId, userId: currentUser._id });
-			
+			const resource = await Resource.findOne({
+				_id: resourceId,
+				userId: currentUser._id
+			});
+
 			// Decrement all tags
 			await addTags([], resource.tags);
 
@@ -120,14 +125,18 @@ module.exports = {
 				throw new Error("Resource deletion failed: no resource found. Either you are not the author or the bulletId is invalid.");
 			}
 
-			const deleteRes = await Resource.deleteOne({ _id: resource._id });
+			const deleteRes = await Resource.deleteOne({
+				_id: resource._id
+			});
 			if (deleteRes.deletedCount !== 1 || !deleteRes.ok) {
 				throw new Error("Resource deletion failed: an error occurred when deleting the bullet.");
 			}
 
 			// Delete all bullets
 			// Alternative way is to toggle the resource hidden field, and decrement the bullet tagging count
-			const bullets = await Bullet.find({ resourceId: resource._id });
+			const bullets = await Bullet.find({
+				resourceId: resource._id
+			});
 			Promise.all(bullets.map(bullet => deleteBullet(bullet)));
 
 			return resource;
@@ -141,7 +150,11 @@ module.exports = {
 				}
 			});
 		},
-		resource: async (parent, { resourceId }, { user }) => {
+		resource: async (parent, {
+			resourceId
+		}, {
+			user
+		}) => {
 			return await Resource.findById(resourceId);
 		},
 		findResources: async (parent, {
@@ -151,8 +164,7 @@ module.exports = {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
-			const query = {
-			}
+			const query = {}
 
 			if (userId) {
 				query.userId = userId;

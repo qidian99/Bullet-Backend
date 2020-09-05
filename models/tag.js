@@ -1,9 +1,20 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const {
+  Schema
+} = mongoose;
 
 const TagSchema = new Schema({
-  name: { type: String, required: true, index: { unique: true } },
-  count: { type: Number, required: true },
+  name: {
+    type: String,
+    required: true,
+    index: {
+      unique: true
+    }
+  },
+  count: {
+    type: Number,
+    required: true
+  },
 }, {
   timestamps: true,
 });

@@ -7,9 +7,14 @@ const Resource = mongoose.model('Resource');
 const Bullet = mongoose.model('Bullet');
 
 const jwt = require('jsonwebtoken');
-const { ObjectId } = require('mongodb');
+const {
+	ObjectId
+} = require('mongodb');
 
-const { INVITATION_TYPES, INVITATION_ACTIONS } = require('./types');
+const {
+	INVITATION_TYPES,
+	INVITATION_ACTIONS
+} = require('./types');
 
 const getUser = token => {
 	try {
@@ -95,7 +100,7 @@ const loadUsersByUsernames = async (usernames) => {
 };
 
 
-const loadUsersByUserIds= async (ids) => {
+const loadUsersByUserIds = async (ids) => {
 	const objectIds = ids.map(id => ObjectId(id));
 	const users = await User.find({
 		_id: {
@@ -122,7 +127,7 @@ const generateJWTToken = async (user) => {
 }
 
 const changeInvitationStatus = (invitation, mode = 'accept') => {
-	
+
 	if (!invitation) {
 		throw new Error("Invitation update failed: invitation object does not exist")
 	}
@@ -157,7 +162,11 @@ const addTags = async (newTags, oldTags) => {
 	}
 
 	// creation process
-	const existingTags = await Tag.find({ name: { $in: newTags } });
+	const existingTags = await Tag.find({
+		name: {
+			$in: newTags
+		}
+	});
 	// console.log('existingTags', existingTags)
 
 	await Tag.updateMany({
@@ -175,7 +184,10 @@ const addTags = async (newTags, oldTags) => {
 	// console.log('nonexistingTags', nonexistingTags)
 
 
-	const insertedTags = nonexistingTags.map(tag => ({ name: tag, count: 1 }));
+	const insertedTags = nonexistingTags.map(tag => ({
+		name: tag,
+		count: 1
+	}));
 
 	const insertedRes = await Tag.insertMany(insertedTags)
 
@@ -187,7 +199,9 @@ const addTags = async (newTags, oldTags) => {
 const deleteBullet = async (bullet) => {
 	// Decrement all tags
 	await addTags([], bullet.tags);
-	const deleteRes = await Bullet.deleteOne({ _id: bullet._id });
+	const deleteRes = await Bullet.deleteOne({
+		_id: bullet._id
+	});
 	if (deleteRes.deletedCount !== 1 || !deleteRes.ok) {
 		throw new Error("Bullet deletion failed: an error occurred when deleting the bullet.");
 	}

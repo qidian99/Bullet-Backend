@@ -1,7 +1,7 @@
 {
-  "name": "dev",
-  "version": "1.0.0",
-  "description": "",
+  "name": "bullet-backend",
+  "version": "2.0.0",
+  "description": "The backend model, schema, and resolver for the novel app Bullet.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -9,9 +9,9 @@
     "refresh": "git pull && forever stop index.js && npm run deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": ["node", "graphql", "apollo", "mongodb"],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "apollo-server": "^2.9.14",
     "bcryptjs": "^2.4.3",

@@ -1,4 +1,6 @@
-const { gql } = require('apollo-server');
+const {
+	gql
+} = require('apollo-server');
 const userSchema = require('./user');
 const roomSchema = require('./room');
 const bulletSchema = require('./bullet');

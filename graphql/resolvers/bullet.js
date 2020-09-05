@@ -36,7 +36,9 @@ module.exports = {
 		room: (parent) => {
 			return Room.findById(parent.roomId);
 		},
-		tags: (parent) => Tag.find({ name: parent.tags }),
+		tags: (parent) => Tag.find({
+			name: parent.tags
+		}),
 	},
 	Mutation: {
 		createBullet: async (parent, {
@@ -115,15 +117,18 @@ module.exports = {
 
 			return bullet;
 
-		},	
+		},
 		deleteBullet: async (parent, {
 			bulletId
 		}, {
 			user
 		}) => {
 			const currentUser = await getCurrentUser(user);
-			const bullet = await Bullet.findOne({ _id: bulletId, userId: currentUser._id });
-			
+			const bullet = await Bullet.findOne({
+				_id: bulletId,
+				userId: currentUser._id
+			});
+
 			if (!bullet) {
 				throw new Error("Bullet deletion failed: no bullet found. Either you are not the author or the bulletId is invalid.");
 			}

@@ -1,6 +1,8 @@
-const { gql } = require('apollo-server');
+const {
+	gql
+} = require('apollo-server');
 
-const typedef = gql`
+const typedef = gql `
 	type FriendInvitation {
 		invitationId: ID!
 		from: User!

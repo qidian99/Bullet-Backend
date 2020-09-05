@@ -152,7 +152,9 @@ module.exports = {
 			username,
 		}) => {
 			if (userId) return User.findById(userId);
-			if (username) return User.findOne({ username });
+			if (username) return User.findOne({
+				username
+			});
 			throw new Error("User retrieval failed: neither userId nor username is provided. You are chilling")
 		},
 		currentUser: async (parent, args, {
