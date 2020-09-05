@@ -10,6 +10,14 @@ mutation deleteBullet {
   }
 }
 
+mutation updateBullet {
+  updateBullet(
+    bulletId: "5f52c7a3e56fc620088d6dfb"
+    content: "new content"
+  ) {
+    ...bulletFragment
+  }
+}
 
 
 query bullets {

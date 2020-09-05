@@ -106,6 +106,18 @@ const changeInvitationStatus = (invitation, mode = 'accept') => {
 	}
 }
 
+const addTags = (newTags, oldTags) => {
+
+	// deletion process
+	if (oldTags && oldTags.length === 0) {
+		
+	}
+
+	// creation process
+	tags = [];
+	return tags;
+}
+
 module.exports = {
 	generateUserModel: ({
 		user
@@ -117,6 +129,7 @@ module.exports = {
 	generateJWTToken,
 	changeInvitationStatus,
 	getCurrentRoom,
+	addTags,
 	INVITATION_TYPES,
 	INVITATION_ACTIONS,
 }
