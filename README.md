@@ -14,7 +14,7 @@
 1. `controllers/`: 为以后Email或者SMS验证留下来的REST API
 
 2. `graphql/`<br>
-    1. `schema/`: GraphQL所有的模式定义,将MongoDB的模式暴露给API
+    1. `schema/`: GraphQL所有的模式定义, 将MongoDB的模式暴露给API
     2. `resolvers/`: GraphQL所有的处理器定义，从数据库请求数据并返回
 
 3. `middlewares/`: CORS、异常处理等中间件
@@ -31,11 +31,10 @@
 2. `npm install`，会下载所有的依赖
 
 3. 启动
-* `npm start`
-
-* `npx nodemon index.js`
+    * `npm start`
+    * `npx nodemon index.js`
 
 3. GraphQL起步
-* 所有GraphiQL API起步文件都在`Query`这个目录下是
-* 本机`npm start`直接访问`localhost:4000`进入GraphiQL界面
-* 可以选择复制`Query`文件夹下的Queries和Mutations，也可以自己写。
+    * 所有GraphiQL API起步文件都在`Query`这个目录下面
+    * 本机启动后直接访问`localhost:4000`进入GraphiQL界面
+    * 可以选择复制`Query`文件夹下的Queries和Mutations，也可以自己写。
