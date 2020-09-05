@@ -9,11 +9,24 @@ const typedef = gql`
 		firstname: String
 		lastname: String
 		avatar: String
+		friends: [User]
 	}
 
 	type LoginResponse {
 		user: User!
 		token: String!
+	}
+
+	
+	type UserSearchResponse {
+		userId: ID!
+		username: String!
+		password: String
+		email: String
+		firstname: String
+		lastname: String
+		avatar: String
+		pending: String
 	}
 
 	input UserInput {
@@ -26,7 +39,7 @@ const typedef = gql`
 		user(userId: ID!): User!
 		currentUser: User
 		verifyToken(token: String!): User!
-		findUser(username: String): [User]
+		findUser(username: String): [UserSearchResponse]
 	}
 
 	extend type Mutation {

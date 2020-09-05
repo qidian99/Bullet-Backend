@@ -11,6 +11,9 @@ const {
 	getCurrentUser,
 	generateJWTToken
 } = require('../../util');
+const {
+	ObjectId
+} = require('mongodb');
 
 const userInputSchema = Joi.object().keys({
 	username: Joi.string().required(),
@@ -21,6 +24,14 @@ const userInputSchema = Joi.object().keys({
 module.exports = {
 	User: {
 		userId: async (parent) => parent._id,
+		friends: async (parent) => {
+			console.log('parent.friends', parent.friends)
+			return User.find({
+				_id: {
+					$in: parent.friends,
+				}
+			})
+		}
 	},
 	Mutation: {
 		delete: async (parent, {
@@ -196,6 +207,55 @@ module.exports = {
 						as: "pending"
 					}
 				},
+
+				// {
+				// 	$project: {
+				// 		"pending": {
+				// 			$filter: {
+				// 				input: "$pending",
+				// 				as: "p",
+				// 				cond: {
+				// 					$eq: ["$$p.from", currentUser._id],
+				// 				}
+				// 			}
+				// 		}
+				// 	}
+				// },
+				{
+					"$project": {
+						"userId": "$_id",
+						"friends": "$friends",
+						"username": "$username",
+						"firstname": "$firstname",
+						"lastname": "$lastname",
+						"avatar": "$avatar",
+						"pending": {
+							$filter: {
+								input: "$pending",
+								as: "p",
+								cond: {
+									$eq: ["$$p.from", ObjectId(currentUser._id)],
+								}
+							}
+						}
+					}
+				},
+				{
+					$set: {
+						pending: {
+							$size: "$pending"
+						},
+						friend: {
+							"$cond": [{
+									"$in": [currentUser.friends]
+								},
+								1,
+								0
+							]
+						}
+					}
+				},
+
 				// {
 				// 	"$unwind": "$pending"
 				// },
@@ -213,11 +273,25 @@ module.exports = {
 				// 		"username": {
 				// 			"$first": "$username"
 				// 		},
-				// 		"contain": {
-				// 			"$first": "$contain"
+				// 		"firstname": {
+				// 			"$first": "$firstname"
+				// 		},
+				// 		"lastname": {
+				// 			"$first": "$lastname"
+				// 		},
+				// 		"avatar": {
+				// 			"$first": "$avatar"
 				// 		},
 				// 		"pending": {
-				// 			"$push": "$pending"
+				// 			"$push": {
+				// 				$filter: {
+				// 					input: "$pending",
+				// 					as: "p",
+				// 					cond: {
+				// 						$eq: ["$$p.from", ObjectId(currentUser._id)],
+				// 					}
+				// 				}
+				// 			}
 				// 		}
 				// 	}
 				// }

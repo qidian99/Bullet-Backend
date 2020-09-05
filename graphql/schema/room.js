@@ -8,7 +8,9 @@ const typedef = gql`
     admins: [User]!
     pending: [User]!
     public: Boolean
-    widgets: [String]
+		widgets: [String]
+		avatar: String
+		updatedAt: String
 	}
 
 	extend type Query {

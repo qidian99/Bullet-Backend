@@ -100,7 +100,7 @@ module.exports = {
 			const currentUser = await getCurrentUser(user);
 
 			let query;
-			console.log(typeof currentUser._id)
+			// console.log(typeof currentUser._id)
 			if (userId && ObjectId(userId) !== currentUser._id) {
 				query = {
 					users: ObjectId(userId)

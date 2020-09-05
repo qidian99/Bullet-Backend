@@ -1,5 +1,5 @@
 mutation createFriendInvitation {
-  createFriendInvitation(to: "5f52bc89e3221e1950a55fd7") {
+  createFriendInvitation(to: "5f52bc8de3221e1950a55fd8") {
     ...friendInvitationFragment
   }
 }
@@ -21,6 +21,13 @@ mutation declineRoomInvitation {
 
 
 query allFriendInvitations {
+  allFriendInvitations {
+    ...friendInvitationFragment
+  }
+}
+
+
+query friendInvitations {
   friendInvitations {
     ...friendInvitationFragment
   }

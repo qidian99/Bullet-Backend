@@ -21,10 +21,8 @@ fragment roomFragment on Room {
       userId
       username
     }
-  	pending {
-      userId
-      username
-    }
+    avatar
+    updatedAt
 }
 
 
@@ -33,5 +31,11 @@ query currentUser {
     userId
     password
     username
+  }
+}
+
+query allRooms {
+  allRooms {
+    ...roomFragment
   }
 }
