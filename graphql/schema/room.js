@@ -14,7 +14,7 @@ const typedef = gql`
 		updatedAt: String
 	}
 
-	type BulletAggregateResponse {
+	type Video {
 		source: String!
 		updatedAt: String!
 		bullets: [Bullet]
@@ -24,8 +24,8 @@ const typedef = gql`
 		rooms: [Room],
 		allRooms(userId: ID): [Room],
 		room(roomId: ID!): Room
-		bulletTeasersInRoom(roomId: ID! limit: Int): [BulletAggregateResponse]
-		aggregateBulletsInRoom(roomId: ID!): [BulletAggregateResponse]
+		videoTeasersInRoom(roomId: ID! limit: Int): [Video]
+		aggregateBulletsInRoom(roomId: ID!): [Video]
 	}
 
 	extend type Mutation {
