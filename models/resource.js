@@ -20,6 +20,10 @@ const ResourceSchema = new Schema({
     type: String,
     required: false
   },
+  avatar: {
+    type: String,
+    required: false
+  },
   files: {
     type: Array,
     required: false

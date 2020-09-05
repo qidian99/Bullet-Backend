@@ -8,6 +8,7 @@ const typedef = gql `
 		name: String
 		room: Room!
 		url: String
+		avatar: String
 		description: String
 		tags: [Tag]
 		user: User!
@@ -23,8 +24,8 @@ const typedef = gql `
 	}
 
 	extend type Mutation {
-		createResource(roomId: ID! name: String! description: String url: String tags: JSON): Resource!
-		updateResource(resourceId: ID! name: String description: String url: String tags: JSON): Resource
+		createResource(roomId: ID! name: String! description: String url: String avatar: String tags: JSON): Resource!
+		updateResource(resourceId: ID! name: String description: String url: String avatar: String tags: JSON): Resource
 		deleteResource(resourceId: ID!): Resource
 	}
 `

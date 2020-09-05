@@ -41,6 +41,7 @@ module.exports = {
 			name,
 			description,
 			url,
+			avatar,
 			tags,
 		}, {
 			user
@@ -53,6 +54,7 @@ module.exports = {
 				userId: currentUser._id,
 				name,
 				url,
+				avatar,
 				description,
 			}
 
@@ -68,6 +70,7 @@ module.exports = {
 			name,
 			description,
 			url,
+			avatar,
 			tags,
 		}, {
 			user
@@ -94,6 +97,10 @@ module.exports = {
 
 			if (url) {
 				resource.url = url;
+			}
+
+			if (avatar) {
+				resource.avatar = avatar;
 			}
 
 			if (tags) {
