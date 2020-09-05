@@ -245,8 +245,7 @@ module.exports = {
 
 			// Aggregate bullets by source
 
-			const aggregate = await Bullet.aggregate([
-				{
+			const aggregate = await Bullet.aggregate([{
 					$match: {
 						roomId: ObjectId(roomId),
 					}
@@ -264,8 +263,12 @@ module.exports = {
 				// },
 				{
 					$group: {
-						_id: { source: "$source" },
-						updatedAt: { $max: "$updatedAt" },
+						_id: {
+							source: "$source"
+						},
+						updatedAt: {
+							$max: "$updatedAt"
+						},
 						bullets: {
 							$push: {
 								_id: "$_id",
@@ -286,12 +289,87 @@ module.exports = {
 						bullets: "$bullets",
 					}
 				},
-				{ $sort : { updatedAt : -1 } },
+				{
+					$sort: {
+						updatedAt: -1
+					}
+				},
 			])
 
-			console.log(aggregate);
+			// console.log(aggregate);
 
 			return aggregate;
+		},
+		bulletTeasersInRoom: async (parent, {
+			roomId,
+			limit = 2,
+		}, {
+			user
+		}) => {
+			const currentUser = await getCurrentUser(user);
+			const currentRoom = await getCurrentRoom(roomId);
+
+			if (currentRoom.public === false && !currentRoom.users.includes(currentUser._id)) {
+				throw new Error("Room retrieval failed: room is private.");
+			}
+
+			// Aggregate bullets by source
+			const aggregate = await Bullet.aggregate([{
+					$match: {
+						roomId: ObjectId(roomId),
+					}
+				},
+				{
+					$group: {
+						_id: {
+							source: "$source"
+						},
+						updatedAt: {
+							$max: "$updatedAt"
+						},
+					}
+				},
+				{
+					$project: {
+						source: "$_id.source",
+						updatedAt: "$updatedAt",
+					}
+				},
+				{
+					$sort: {
+						updatedAt: -1
+					}
+				}
+			])
+
+			const result = [];
+			await Promise.all(aggregate.map(async (agg) => {
+				const bullets = await Bullet.aggregate([{
+						$match: {
+							roomId: ObjectId(roomId),
+							source: agg.source,
+						}
+					},
+					{
+						$sort: {
+							updatedAt: -1
+						}
+					},
+					{
+						$limit: limit,
+					}
+				]);
+				result.push({
+					source: agg.source,
+					updatedAt: agg.updatedAt,
+					bullets
+				})
+			}))
+
+			// console.log(result);
+
+			return result;
 		}
-	}
+	},
+
 }
