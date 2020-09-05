@@ -113,6 +113,9 @@ module.exports = {
 		},
 	},
 	Query: {
+		allFriendInvitations: async () => {
+			return FriendInvitation.find({});
+		},
 		friendInvitations: async (parent, _, {
 			user
 		}) => {

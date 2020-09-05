@@ -6,7 +6,7 @@ mutation createInvitation {
 
 
 mutation acceptRoomInvitation {
-  acceptRoomInvitation(invitationId: "5f52b8aa99581d573cbe0385") {
+  acceptRoomInvitation(invitationId: "5f52bd529a1f761f8c44eae4") {
 		...invitationFragment
   }
 }
@@ -20,8 +20,8 @@ mutation declineRoomInvitation {
 }
 
 
-query allRoomInvitations {
-  allRoomInvitations {
+query roomInvitations {
+  roomInvitations {
  		...invitationFragment
   }
 }

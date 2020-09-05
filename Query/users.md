@@ -3,6 +3,13 @@ query Users {
   users {
     userId
     password
+    username
+    email
+    friends {
+      userId
+      email
+      username
+    }
   }
 }
 
@@ -70,6 +77,12 @@ mutation createUserWithProfile {
   }
 }
 
+query findUser {
+	findUser(username: "q") {
+    ...userSearchFragment
+  }
+}
+
 
 fragment userProfile on User {
 	userId
@@ -79,4 +92,16 @@ fragment userProfile on User {
   firstname
   lastname
   avatar
+}
+
+
+fragment userSearchFragment on UserSearchResponse {
+	userId
+  username
+  password
+  email
+  firstname
+  lastname
+  avatar
+  pending
 }

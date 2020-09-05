@@ -8,6 +8,7 @@ const RoomSchema = new Schema({
   pending: { type: Array, required: false }, // Pending list for all the users waiting to join the room
   public: { type: Boolean, required: false }, // Whether the room is public or not
   widgets: { type: Array, required: false },
+  avatar: { type: String, required: false },
 }, {
   timestamps: true,
 });
