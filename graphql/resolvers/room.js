@@ -265,6 +265,7 @@ module.exports = {
 				{
 					$group: {
 						_id: { source: "$source" },
+						updatedAt: { $max: "$updatedAt" },
 						bullets: {
 							$push: {
 								_id: "$_id",
@@ -281,9 +282,11 @@ module.exports = {
 				{
 					$project: {
 						source: "$_id.source",
+						updatedAt: "$updatedAt",
 						bullets: "$bullets",
 					}
-				}
+				},
+				{ $sort : { updatedAt : -1 } },
 			])
 
 			console.log(aggregate);
