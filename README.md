@@ -1,7 +1,7 @@
 # Bullet弹幕记忆仓库、
 
 ## Demo视频
-
+https://www.bilibili.com/video/BV19A411E7GY/
 
 ## 前端网页端Github仓库
 https://github.com/qidian99/Bullet-Frontend
