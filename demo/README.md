@@ -3,13 +3,13 @@
 本文档主要对以下模型进行技术性说明：
 1. User：Bullet用户对象
 2. Room：房间对象，为用户创建，可公开或私有
-3. Invitation：房间邀请
-4. Tag：标签对象
-5. Bullet：弹幕对象
-6. Resource：资源对象
+3. Bullet：弹幕对象
+4. Resource：资源对象
+5. Tag：标签对象
+6. Invitation：房间邀请
 7. Friend：好友邀请
 
-同时我也录制了后端API交互界面演示助于理解：
+同时我也录制了后端API交互界面演示助于理解。
 
 ## User用户对象
 ### 模式定义
@@ -190,17 +190,17 @@ type Bullet {
 }
 ```
 
-1.bulletId：弹幕ID，唯一标识
-2.user：弹幕发送者
-3.room：弹幕从属房间
-4.source：弹幕源(URI类型，比如视频URL)
-5.resource：对应资源（同一房间中）
-6.tags：弹幕标签（详情见Tag文档）
-7.row：弹幕行，用于插件注入展示
-8.timestamp：弹幕时间戳，可以理解为溢出屏幕的弹幕列
-9.content：弹幕内容
-10.updatedAt：弹幕更新时间
-11.createdAt：弹幕创建时间
+1. bulletId：弹幕ID，唯一标识
+2. user：弹幕发送者
+3. room：弹幕从属房间
+4. source：弹幕源(URI类型，比如视频URL)
+5. resource：对应资源（同一房间中）
+6. tags：弹幕标签（详情见Tag文档）
+7. row：弹幕行，用于插件注入展示
+8. timestamp：弹幕时间戳，可以理解为溢出屏幕的弹幕列
+9. content：弹幕内容
+10. updatedAt：弹幕更新时间
+11. createdAt：弹幕创建时间
 
 ### API和返回值
 
@@ -233,3 +233,155 @@ allBulletsInResource(roomId: ID! resourceId: ID!): [Bullet]
 
 特定资源下所有的弹幕。前端使用极广，是房间下资源详情页面加载时调用的API。用于资源内弹幕时间线展示。
 
+## Resource资源对象
+### 模式
+```ts
+type Resource {
+  resourceId: ID!
+  name: String
+  room: Room!
+  url: String
+  avatar: String
+  description: String
+  tags: [Tag]
+  user: User!
+  updatedAt: String
+  createdAt: String
+  hidden: Boolean
+}
+```
+
+1. resourceId：资源ID，唯一标识
+2. name：资源名称
+3. room：资源所在房间
+4. url：资源URI
+5. avatar：资源图片
+6. description：资源描述
+7. tags：资源标签
+8. user：资源创建者
+9. updatedAt：资源更新时间
+10. createdAt：资源创建时间
+11. hidden：资源可见，用于替换删除操作（保留数据和标签）
+
+### API和返回值
+
+#### 基本CRUD操作
+```ts
+resources: [Resource] // 所有资源，Query类型
+
+resource(resourceId: ID!): Resource // 单个资源查询
+
+createResource(roomId: ID! name: String! description: String url: String avatar: String tags: JSON): Resource!  // 创建资源，Mutation类型
+
+updateResource(resourceId: ID! name: String description: String url: String avatar: String tags: JSON): Resource  // 更新特定资源，Mutation类型
+
+deleteResource(resourceId: ID!): Resource // 删除特定资源，Mutation类型
+```
+
+#### 其他查询（面向前端展示需求）
+```ts
+findResources(userId: ID roomId: ID): [Resource]
+```
+1. 查找特定用户在特定房间创建的所有资源
+2. 查找特定房间的所有资源
+3. 查找特定用户创建的所有资源
+
+
+
+## Tag标签对象
+ 
+### 模式
+```ts
+type Tag {
+  tagId: ID!
+  name: String!
+  count: Int!
+}
+```
+
+1. tagId：标签ID，唯一标识
+2. name：标签名称
+3. count：标签被引用次数
+
+
+### 查询
+```ts
+tags: [Tag] // 所有标签
+searchTagByName(name: String): [Tag] // 正则搜索标签
+```
+
+### 标签引用规则
+1. 当单个资源对象或弹幕对象被创建且带有标签时：<br>
+    1. 对于所有已有标签，其引用+1
+    2. 对于所有为存在标签，创建一个1引用的标签
+2. 当单个弹幕对象被创建但没有标签时，会默认继承所属资源标签。
+3. 当资源或弹幕对象被删除时，会减少其所含标签的1个引用
+4. 当资源被隐藏（hidden）时，同样减少对应标签引用。
+
+## Invitation房间邀请
+
+### 模式
+
+```ts
+type RoomInvitation {
+  invitationId: ID!
+  user: User!
+  room: Room
+  accepted: Int!
+  sentAt: String!
+}
+```
+
+### CRUD
+```ts
+invitations: [RoomInvitation] // 当前用户所有的房间邀请，Query类型
+
+roomInvitations(history: Boolean): [RoomInvitation] // 当前用户所有的房间邀请，包含无效邀请，Query类型
+
+createRoomInvitation(roomId: ID! userId: ID!): RoomInvitation! // 创建房间邀请给目标用户，Mutation类型
+
+acceptRoomInvitation(invitationId: ID!): RoomInvitation! // 接受目标房间邀请，Mutation类型
+
+declineRoomInvitation(invitationId: ID!): RoomInvitation! // 拒绝目标房间邀请，Mutation类型
+```
+
+## Friend好友邀请
+
+### 模式
+
+```ts
+type FriendInvitation {
+  invitationId: ID!
+  from: User!
+  to: User!
+  accepted: Int!
+  sentAt: String!
+}
+```
+
+### CRUD
+```ts
+friendInvitations(history: Boolean): [FriendInvitation] // 当前用户所有的好友邀请，包含历史已同意或拒绝的邀请，Query类型
+
+allFriendInvitations: [FriendInvitation] // 当前用户待接受的所有好友邀请，Query类型
+
+createFriendInvitation(to: ID!): FriendInvitation! // 创建好友邀请给目标用户，Mutation类型
+
+acceptFriendInvitation(invitationId: ID!): FriendInvitation! // 接受目标用户好友邀请，Mutation类型
+
+declineFriendInvitation(invitationId: ID!): FriendInvitation! // 拒绝目标用户好友邀请，Mutation类型
+
+deleteFriend(userId: ID!): User  // 双向删除好友，Mutation类型
+
+addFriendWithoutInvitation(to: ID!): FriendInvitation!  // 测试用API，跳过邀请直接添加双向好友，Mutation类型
+```
+
+### 邀请模式说明
+两种邀请类型，目前是存储在不同的集合，因为邀请所对应的属性不一样。未来考虑插入一个新的`type`字段来帮助动态决定对象模型，这样可以把`from`、`to`动态映射到不同的对象，比如Room、User。
+
+### 常量类型
+1. -2：邀请从属实体被删除、或邀请被撤销。比如房间被删除
+2. -1：邀请待回复
+3. 0：邀请被拒绝
+4. 1：邀请被同意
+ 

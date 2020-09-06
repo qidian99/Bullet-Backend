@@ -12,7 +12,7 @@ const typedef = gql `
 	}
 
 	extend type Query {
-		invitations: [RoomInvitation],
+		invitations: [RoomInvitation]
 		roomInvitations(history: Boolean): [RoomInvitation]
 	}
 

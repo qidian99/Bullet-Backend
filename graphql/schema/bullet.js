@@ -10,8 +10,8 @@ const typedef = gql `
 		source: String!
 		resource: Resource!
 		tags: [Tag]
-		row: Int
-    timestamp: Int!
+		row: Float
+    timestamp: Float!
 		content: String!
 		updatedAt: String
 		createdAt: String

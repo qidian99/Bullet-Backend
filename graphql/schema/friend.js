@@ -12,8 +12,8 @@ const typedef = gql `
 	}
 
 	extend type Query {
-		friendInvitations(history: Boolean): [FriendInvitation],
-		allFriendInvitations: [FriendInvitation],
+		friendInvitations(history: Boolean): [FriendInvitation]
+		allFriendInvitations: [FriendInvitation]
 	}
 
 	extend type Mutation {
