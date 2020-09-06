@@ -3,6 +3,8 @@
 ## Demo视频
 https://www.bilibili.com/video/BV19A411E7GY/
 
+## [项目企划](https://github.com/qidian99/Bullet-Backend/blob/master/Bullet%E5%BC%B9%E5%B9%95%E6%97%B6%E9%97%B4%E8%83%B6%E5%9B%8A.pdf)
+
 ## 前端网页端Github仓库
 https://github.com/qidian99/Bullet-Frontend
 
