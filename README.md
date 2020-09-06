@@ -1,6 +1,20 @@
-# Bullet后端部署文档
+# Bullet弹幕记忆仓库、
 
-## 技术
+## Demo视频
+
+
+## 前端网页端Github仓库
+https://github.com/qidian99/Bullet-Frontend
+
+## 前端浏览器插件端Github仓库
+https://github.com/qidian99/Bullet-Extension
+
+## 后端部署文档
+
+### [后端模型技术文档](https://github.com/qidian99/Bullet-Backend/blob/master/demo/README.md)
+后端的所有对象模型和API文档，包括 `User用户对象`, `Room房间对象`, `Bullet弹幕对象`, `Resource资源对象`, `Tag标签对象`, `Invitation房间邀请`, `Friend好友邀请`
+
+### 技术
 
 1. node. JS的后端server
 2. GraphQL. Facebook的Graph API server, 比REST不知道强到哪里去了
@@ -9,7 +23,7 @@
     * 详情了解：https://github.com/apollographql/subscriptions-transport-ws
 4. MongoDB. NoSQL，存非结构数据和进行Aggregation完爆SQL，慢点就慢点吧
 
-## 项目结构
+### 项目结构
 
 1. `controllers/`: 为以后Email或者SMS验证留下来的REST API
 
@@ -25,7 +39,7 @@
 
 6. `doc/`: 后端所有API的文档，从`index.html`进入
 
-## 安装
+### 安装
 1. 本地下载MongoDB。如果是Macbook可以`brew install`；如果是Windows建议安装MongoDB Compass Community版本。如果是其他电脑建议买一台Macbook或者Windows。
     * 本项目同样部署有MongoDB Atlas数据库，需要Demo可以联系我
 
